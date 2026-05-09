@@ -2,14 +2,15 @@
 
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { Meeting } from "./demo-data";
+import type { Meeting, Decision, ActionItem } from "./demo-data";
 
 /**
  * Demo-mutaties — Zustand store met localStorage-persistence.
  *
- * Bevat door de gebruiker toegevoegde vergaderingen + alle document-uploads.
- * Bestand-metadata is persistent (overleeft refresh); de bestandsinhoud
- * zelf wordt niet bewaard (in productie: MinIO/S3 met PKI/QR).
+ * Bevat door de gebruiker toegevoegde vergaderingen, besluiten,
+ * actiepunten + alle document-uploads. Bestand-metadata is persistent
+ * (overleeft refresh); de bestandsinhoud zelf wordt niet bewaard
+ * (in productie: MinIO/S3 met PKI/QR).
  */
 
 export type EntityType =
@@ -37,10 +38,20 @@ export type DocumentMeta = {
 };
 
 type SgdpStore = {
-  // Vergaderingen door gebruiker toegevoegd
+  // Vergaderingen
   addedMeetings: Meeting[];
   addMeeting: (m: Meeting) => void;
   removeMeeting: (id: string) => void;
+
+  // Besluiten
+  addedDecisions: Decision[];
+  addDecision: (d: Decision) => void;
+  removeDecision: (id: string) => void;
+
+  // Actiepunten
+  addedActionItems: ActionItem[];
+  addActionItem: (a: ActionItem) => void;
+  removeActionItem: (id: string) => void;
 
   // Document-uploads (alleen metadata persistent)
   documents: DocumentMeta[];
@@ -60,7 +71,23 @@ export const useSgdpStore = create<SgdpStore>()(
       addMeeting: (m) =>
         set((s) => ({ addedMeetings: [m, ...s.addedMeetings] })),
       removeMeeting: (id) =>
-        set((s) => ({ addedMeetings: s.addedMeetings.filter((x) => x.id !== id) })),
+        set((s) => ({
+          addedMeetings: s.addedMeetings.filter((x) => x.id !== id),
+          addedDecisions: s.addedDecisions.filter((d) => d.meetingId !== id),
+          addedActionItems: s.addedActionItems.filter((a) => a.meetingId !== id),
+        })),
+
+      addedDecisions: [],
+      addDecision: (d) =>
+        set((s) => ({ addedDecisions: [d, ...s.addedDecisions] })),
+      removeDecision: (id) =>
+        set((s) => ({ addedDecisions: s.addedDecisions.filter((x) => x.id !== id) })),
+
+      addedActionItems: [],
+      addActionItem: (a) =>
+        set((s) => ({ addedActionItems: [a, ...s.addedActionItems] })),
+      removeActionItem: (id) =>
+        set((s) => ({ addedActionItems: s.addedActionItems.filter((x) => x.id !== id) })),
 
       documents: [],
       addDocuments: (entityType, entityId, files, user) => {
@@ -80,6 +107,6 @@ export const useSgdpStore = create<SgdpStore>()(
       removeDocument: (id) =>
         set((s) => ({ documents: s.documents.filter((d) => d.id !== id) })),
     }),
-    { name: "sgdp-store-v1" },
+    { name: "sgdp-store-v2" },
   ),
 );

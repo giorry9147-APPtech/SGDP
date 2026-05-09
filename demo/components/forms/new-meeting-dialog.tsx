@@ -29,6 +29,7 @@ export function NewMeetingDialog() {
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("Kabinet van de President, Paramaribo");
   const [attendees, setAttendees] = useState<string[]>([user.userId]);
+  const [extraAttendeesText, setExtraAttendeesText] = useState("");
   const [agendaText, setAgendaText] = useState("");
 
   const reset = () => {
@@ -37,6 +38,7 @@ export function NewMeetingDialog() {
     setTitle("");
     setLocation("Kabinet van de President, Paramaribo");
     setAttendees([user.userId]);
+    setExtraAttendeesText("");
     setAgendaText("");
   };
 
@@ -47,13 +49,14 @@ export function NewMeetingDialog() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const typeLabel = MEETING_TYPES.find((t) => t.value === type)?.label ?? type;
+    const extras = extraAttendeesText.split("\n").map((s) => s.trim()).filter(Boolean);
     const newMeeting: Meeting = {
       id: `MTG-USER-${Date.now()}`,
       date,
       type,
       title: title.trim() || `${typeLabel} ${date}`,
       location: location.trim(),
-      attendees,
+      attendees: [...attendees, ...extras],
       agenda: agendaText.split("\n").map((s) => s.trim()).filter(Boolean),
       decisions: [],
       actionItemsCreated: 0,
@@ -171,6 +174,22 @@ export function NewMeetingDialog() {
                   </button>
                 );
               })}
+            </div>
+
+            <div className="mt-2">
+              <label className="text-[10px] font-medium text-sr-ink-500 mb-1 block">
+                Extra uitgenodigden / waarnemers <span className="text-sr-ink-300">(één per regel)</span>
+              </label>
+              <textarea
+                value={extraAttendeesText}
+                onChange={(e) => setExtraAttendeesText(e.target.value)}
+                rows={3}
+                placeholder={"DEMO_Granman R. Misiedjan\nVIDS-waarnemer\n20 dorpsbewoners\nKAMPOS-coördinator"}
+                className="w-full px-3 py-2 border border-sr-line rounded-md text-xs bg-white focus:outline-none focus:ring-2 focus:ring-sr-green-500"
+              />
+              <p className="mt-1 text-[10px] text-sr-ink-500">
+                Voor traditioneel gezag, koepelorganisaties (VIDS/KAMPOS), pers, of aantallen (&quot;20 dorpsbewoners&quot;).
+              </p>
             </div>
           </div>
 
