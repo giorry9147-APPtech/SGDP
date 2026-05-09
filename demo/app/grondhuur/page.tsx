@@ -9,6 +9,7 @@ import {
   tenures, conversions, forfeitures, monthsUntilExpiry, expiryFlag,
   type Tenure,
 } from "@/lib/demo-data";
+import { DocumentUpload } from "@/components/forms/document-upload";
 import { cn, formatDate } from "@/lib/utils";
 
 const PURPOSE_LABEL: Record<Tenure["purpose"], string> = {
@@ -276,11 +277,16 @@ export default function GrondhuurPage() {
                       </div>
                     )}
                     {c.blockers.length === 0 && (!c.conditions || c.conditions.length === 0) && (
-                      <div className="flex items-center gap-2 text-xs text-sr-green-900">
+                      <div className="flex items-center gap-2 text-xs text-sr-green-900 mb-2">
                         <CheckCircle2 className="size-3.5 text-sr-green-700" />
                         Stukken op orde — kan voor besluitvorming.
                       </div>
                     )}
+
+                    <div className="mt-2 pt-2 border-t border-sr-line">
+                      <div className="text-[10px] font-bold uppercase tracking-wider text-sr-ink-500 mb-1.5">Stukken (PERCEELSID-kaart, hypothecair uittreksel, betalingsbewijs)</div>
+                      <DocumentUpload entityType="conversion" entityId={c.id} variant="compact" />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -343,6 +349,11 @@ export default function GrondhuurPage() {
                       {t.arrearsAmount > 0 && (
                         <span className="text-sr-red-700"><strong>Achterstand:</strong> {fmtSRD(t.arrearsAmount)}</span>
                       )}
+                    </div>
+
+                    <div className="mt-3 pt-2 border-t border-sr-line">
+                      <div className="text-[10px] font-bold uppercase tracking-wider text-sr-ink-500 mb-1.5">Bijlagen vervallenverklaring (motivatie, hoor & wederhoor, beschikking)</div>
+                      <DocumentUpload entityType="forfeiture" entityId={f.id} variant="compact" />
                     </div>
                   </div>
                 </div>

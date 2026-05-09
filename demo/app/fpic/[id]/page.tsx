@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { fpicProcesses, communities, applications } from "@/lib/demo-data";
 import { Badge } from "@/components/ui/badge";
+import { DocumentUpload } from "@/components/forms/document-upload";
 import { cn, formatDate } from "@/lib/utils";
 
 const EVENT_ICONS = {
@@ -136,7 +137,7 @@ export default function FpicDetail({ params }: { params: Promise<{ id: string }>
                       </div>
 
                       {ev.evidence.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5">
+                        <div className="flex flex-wrap gap-1.5 mb-2">
                           {ev.evidence.map((e, i) => {
                             const EIcon = EVIDENCE_ICONS[e.type];
                             return (
@@ -148,12 +149,19 @@ export default function FpicDetail({ params }: { params: Promise<{ id: string }>
                           })}
                         </div>
                       )}
+
+                      <DocumentUpload entityType="fpic_event" entityId={ev.id} variant="compact" label="Extra evidence toevoegen" />
                     </div>
                   </div>
                 );
               })}
             </div>
           )}
+
+          <div className="mt-4 pt-4 border-t border-sr-line">
+            <div className="text-[10px] font-bold uppercase tracking-wider text-sr-ink-500 mb-1.5">FPIC-traject — algemene bijlagen</div>
+            <DocumentUpload entityType="fpic_process" entityId={fpic.id} variant="dropzone" label="Klik of sleep een document hier" />
+          </div>
         </div>
 
         {/* Side info */}

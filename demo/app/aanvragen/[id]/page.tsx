@@ -11,6 +11,7 @@ import {
 import { applications, communities, districts, fpicProcesses } from "@/lib/demo-data";
 import { Badge } from "@/components/ui/badge";
 import { AdviceReportPanel } from "@/components/advice/advice-report";
+import { DocumentUpload } from "@/components/forms/document-upload";
 import { formatDate, daysBetween, cn } from "@/lib/utils";
 
 const SgdpMap = dynamic(() => import("@/components/map/sgdp-map").then(m => m.SgdpMap), {
@@ -147,7 +148,7 @@ export default function AanvraagDetail({ params }: { params: Promise<{ id: strin
               <FileText className="size-4 text-sr-green-700" />
               <h3 className="text-sm font-semibold text-sr-ink-900">Documenten</h3>
             </div>
-            <div className="space-y-1.5">
+            <div className="space-y-1.5 mb-3">
               {requiredDocs.map((doc) => {
                 const present = application.documentsProvided.includes(doc.key);
                 return (
@@ -161,6 +162,10 @@ export default function AanvraagDetail({ params }: { params: Promise<{ id: strin
                   </div>
                 );
               })}
+            </div>
+            <div className="pt-3 border-t border-sr-line sr-print-hide">
+              <div className="text-[10px] font-bold uppercase tracking-wider text-sr-ink-500 mb-1.5">Extra dossier-bijlagen</div>
+              <DocumentUpload entityType="case" entityId={application.id} variant="compact" />
             </div>
           </div>
 

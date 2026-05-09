@@ -1,17 +1,30 @@
+"use client";
+
 import {
   Workflow, Calendar, CheckSquare, Vote, Users, Clock,
-  AlertCircle, CheckCircle2,
+  AlertCircle, CheckCircle2, Sparkles, Trash2,
 } from "lucide-react";
 import Link from "next/link";
+import { useShallow } from "zustand/react/shallow";
 import { PageHeader, SectionHeader } from "@/components/ui/section-header";
 import { Badge } from "@/components/ui/badge";
 import {
   meetings, decisions, actionItems, workgroupMembers, milestones,
 } from "@/lib/demo-data";
 import { cn, formatDate, daysBetween } from "@/lib/utils";
+import { useSgdpStore } from "@/lib/store";
+import { NewMeetingDialog } from "@/components/forms/new-meeting-dialog";
+import { DocumentUpload } from "@/components/forms/document-upload";
 
 export default function WerkgroepPage() {
-  const upcomingMeetings = meetings.slice(0, 3);
+  const addedMeetings = useSgdpStore(useShallow((s) => s.addedMeetings));
+  const removeMeeting = useSgdpStore((s) => s.removeMeeting);
+
+  const allMeetings = [...addedMeetings, ...meetings].sort((a, b) =>
+    b.date.localeCompare(a.date),
+  );
+  const upcomingMeetings = allMeetings.slice(0, 5);
+
   const openActions = actionItems.filter(a => a.status === "open" || a.status === "in_uitvoering" || a.status === "achterstallig");
   const recentDecisions = decisions.slice(0, 5);
 
@@ -21,6 +34,7 @@ export default function WerkgroepPage() {
         eyebrow="Module 6 — Werkgroep-werkruimte"
         title="Werkgroep Grondenrechten & Decentralisatie"
         description="Vergaderingen, besluiten, actiepunten en mijlpalen. Werkarm van het Staatshoofd; benoemd december 2025."
+        action={<NewMeetingDialog />}
       />
 
       {/* Leden */}
@@ -48,52 +62,95 @@ export default function WerkgroepPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Vergaderingen */}
         <div className="sr-card p-5 lg:col-span-2">
-          <SectionHeader icon={Calendar} title="Vergaderingen" description="Plenair, werkstroom, klankbord, veldconsultatie." />
+          <SectionHeader
+            icon={Calendar}
+            title="Vergaderingen"
+            description="Plenair, werkstroom, klankbord, veldconsultatie, stuur."
+            action={
+              <span className="text-[10px] text-sr-ink-500">
+                {addedMeetings.length} eigen · {meetings.length} seed
+              </span>
+            }
+          />
 
           <div className="space-y-3">
-            {upcomingMeetings.map((m) => (
-              <div key={m.id} className="sr-card sr-tile p-3.5">
-                <div className="flex items-start gap-3">
-                  <div className="size-12 rounded-md bg-sr-green-100 flex flex-col items-center justify-center shrink-0">
-                    <span className="text-[10px] font-bold uppercase text-sr-green-700">{new Date(m.date).toLocaleDateString("nl-NL", { month: "short" })}</span>
-                    <span className="text-base font-bold text-sr-green-900 leading-none">{new Date(m.date).getDate()}</span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      <span className="font-semibold text-sm text-sr-ink-900">{m.title}</span>
-                      <Badge variant={
-                        m.type === "plenair" ? "green" :
-                        m.type === "veldconsultatie" ? "gold" :
-                        m.type === "stuur_president" ? "red" : "neutral"
-                      } className="text-[10px]">{m.type.replace(/_/g, " ")}</Badge>
+            {upcomingMeetings.map((m) => {
+              const isUserAdded = m.id.startsWith("MTG-USER-");
+              return (
+                <div key={m.id} className={cn(
+                  "sr-card sr-tile p-3.5",
+                  isUserAdded && "border-sr-green-500 bg-sr-green-50/30",
+                )}>
+                  <div className="flex items-start gap-3">
+                    <div className="size-12 rounded-md bg-sr-green-100 flex flex-col items-center justify-center shrink-0">
+                      <span className="text-[10px] font-bold uppercase text-sr-green-700">
+                        {new Date(m.date).toLocaleDateString("nl-NL", { month: "short" })}
+                      </span>
+                      <span className="text-base font-bold text-sr-green-900 leading-none">
+                        {new Date(m.date).getDate()}
+                      </span>
                     </div>
-                    <div className="text-xs text-sr-ink-500 mb-2">
-                      {formatDate(m.date, { weekday: "long", day: "numeric", month: "long", year: "numeric" })} · {m.location} · {m.attendees.length} aanwezigen
-                    </div>
-
-                    <details className="text-xs">
-                      <summary className="cursor-pointer text-sr-green-700 hover:text-sr-green-900 font-medium">
-                        Agenda ({m.agenda.length}) · besluiten ({m.decisions.length}) · acties ({m.actionItemsCreated})
-                      </summary>
-                      <div className="mt-2 space-y-2">
-                        <div>
-                          <div className="text-[10px] font-bold uppercase tracking-wider text-sr-ink-500 mb-1">Agenda</div>
-                          <ul className="space-y-0.5">
-                            {m.agenda.map((a, i) => <li key={i} className="text-sr-ink-700">{i + 1}. {a}</li>)}
-                          </ul>
-                        </div>
-                        <div>
-                          <div className="text-[10px] font-bold uppercase tracking-wider text-sr-ink-500 mb-1">Besluiten</div>
-                          <ul className="space-y-0.5">
-                            {m.decisions.map((d, i) => <li key={i} className="text-sr-ink-700">• {d}</li>)}
-                          </ul>
-                        </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
+                        <span className="font-semibold text-sm text-sr-ink-900">{m.title}</span>
+                        <Badge variant={
+                          m.type === "plenair" ? "green" :
+                          m.type === "veldconsultatie" ? "gold" :
+                          m.type === "stuur_president" ? "red" : "neutral"
+                        } className="text-[10px]">{m.type.replace(/_/g, " ")}</Badge>
+                        {isUserAdded && (
+                          <Badge variant="status-fpic" className="text-[10px]">
+                            <Sparkles className="size-2.5" /> nieuw
+                          </Badge>
+                        )}
+                        {isUserAdded && (
+                          <button
+                            type="button"
+                            onClick={() => removeMeeting(m.id)}
+                            aria-label="Verwijder vergadering"
+                            className="ml-auto size-6 rounded-md flex items-center justify-center text-sr-ink-300 hover:bg-sr-red-50 hover:text-sr-red-700 transition-colors"
+                          >
+                            <Trash2 className="size-3.5" />
+                          </button>
+                        )}
                       </div>
-                    </details>
+                      <div className="text-xs text-sr-ink-500 mb-2">
+                        {formatDate(m.date, { weekday: "long", day: "numeric", month: "long", year: "numeric" })} · {m.location} · {m.attendees.length} aanwezigen
+                      </div>
+
+                      <details className="text-xs">
+                        <summary className="cursor-pointer text-sr-green-700 hover:text-sr-green-900 font-medium">
+                          Agenda ({m.agenda.length}) · besluiten ({m.decisions.length}) · acties ({m.actionItemsCreated})
+                        </summary>
+                        <div className="mt-2 space-y-2">
+                          {m.agenda.length > 0 && (
+                            <div>
+                              <div className="text-[10px] font-bold uppercase tracking-wider text-sr-ink-500 mb-1">Agenda</div>
+                              <ul className="space-y-0.5">
+                                {m.agenda.map((a, i) => <li key={i} className="text-sr-ink-700">{i + 1}. {a}</li>)}
+                              </ul>
+                            </div>
+                          )}
+                          {m.decisions.length > 0 && (
+                            <div>
+                              <div className="text-[10px] font-bold uppercase tracking-wider text-sr-ink-500 mb-1">Besluiten</div>
+                              <ul className="space-y-0.5">
+                                {m.decisions.map((d, i) => <li key={i} className="text-sr-ink-700">• {d}</li>)}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+                      </details>
+
+                      <div className="mt-3 pt-2 border-t border-sr-line">
+                        <div className="text-[10px] font-bold uppercase tracking-wider text-sr-ink-500 mb-1.5">Notulen + bijlagen</div>
+                        <DocumentUpload entityType="meeting" entityId={m.id} variant="compact" />
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
@@ -149,6 +206,9 @@ export default function WerkgroepPage() {
                 <div className="text-sm font-medium text-sr-ink-900 mb-0.5">{d.title}</div>
                 <div className="text-xs text-sr-ink-700 leading-relaxed">{d.outcome}</div>
                 <div className="text-[10px] text-sr-ink-500 mt-1">{formatDate(d.date)}</div>
+                <div className="mt-2">
+                  <DocumentUpload entityType="decision" entityId={d.id} variant="compact" label="Bijlage" />
+                </div>
               </div>
             ))}
           </div>
@@ -188,6 +248,9 @@ export default function WerkgroepPage() {
                          days === 0 ? "vandaag" :
                          `over ${days}d`}
                       </span>
+                    </div>
+                    <div className="mt-1.5">
+                      <DocumentUpload entityType="action" entityId={a.id} variant="compact" label="Bewijs" />
                     </div>
                   </div>
                 </div>

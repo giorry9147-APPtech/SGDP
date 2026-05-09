@@ -11,6 +11,7 @@ import {
 import { cn } from "@/lib/utils";
 import { logoutAction } from "@/app/login/actions";
 import type { DemoUser } from "@/lib/auth-data";
+import { UserProvider } from "@/components/user-context";
 
 const nav = [
   { href: "/",                label: "Executive Dashboard", icon: LayoutDashboard, badge: "PRESIDENT" },
@@ -121,7 +122,7 @@ export function AppShell({ children, user }: { children: React.ReactNode; user: 
 
         {/* Hoofdgebied */}
         <main className="flex-1 min-w-0 overflow-x-hidden">
-          {children}
+          <UserProvider user={user}>{children}</UserProvider>
         </main>
       </div>
 

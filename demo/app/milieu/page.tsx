@@ -11,6 +11,7 @@ import {
   meaActivityMatrix, applications, tenures, protectedAreas,
   type EnvCase,
 } from "@/lib/demo-data";
+import { DocumentUpload } from "@/components/forms/document-upload";
 import { cn, formatDate } from "@/lib/utils";
 
 const TRIGGER_LABEL: Record<EnvCase["triggerType"], string> = {
@@ -234,6 +235,11 @@ export default function MilieuPage() {
                         </ul>
                       </details>
                     )}
+
+                    <div className="mt-3 pt-2 border-t border-sr-line">
+                      <div className="text-[10px] font-bold uppercase tracking-wider text-sr-ink-500 mb-1.5">MER + bijlagen (NMA-reviewer)</div>
+                      <DocumentUpload entityType="env_case" entityId={e.id} variant="compact" />
+                    </div>
                   </div>
                 </div>
               </div>
