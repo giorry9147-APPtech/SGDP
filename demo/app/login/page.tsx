@@ -22,7 +22,7 @@ export default function LoginPage() {
             style={{ background: "linear-gradient(to bottom, transparent, var(--sr-gold-500), transparent)" }}
           />
 
-          <div className="relative flex-1 flex flex-col p-12 xl:p-16">
+          <div className="relative flex-1 flex flex-col px-12 xl:px-16 pt-6 xl:pt-8 pb-12 xl:pb-16">
             {/* Top — institutioneel */}
             <div className="flex items-center gap-3 sr-fade-up">
               <span className="sr-coa-large">SR</span>
