@@ -50,9 +50,8 @@ export default function LoginPage() {
               </h1>
               <p className="text-base xl:text-lg text-white/80 leading-relaxed mb-10 max-w-lg sr-fade-up-2">
                 Eén werkomgeving voor de Werkgroep Grondenrechten en Decentralisatie:
-                kaart, dossiers, FPIC, conflictdetectie, regelgebaseerd advies en
-                onveranderbare audit — met respect voor traditioneel gezag en
-                IACHR-jurisprudentie.
+                kaart, dossiers, FPIC, conflictdetectie en regelgebaseerd advies —
+                met respect voor traditioneel gezag en IACHR-jurisprudentie.
               </p>
 
               {/* Kernwaarden */}
