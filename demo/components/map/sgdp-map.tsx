@@ -87,16 +87,16 @@ export function SgdpMap({
         },
       });
 
-      // ─── Beschermde gebieden ─────────
+      // ─── Beschermde gebieden — TEAL ─────────
       map.addSource("sr-protected", { type: "geojson", data: protectedAreas });
       map.addLayer({
         id: "protected-fill",
         type: "fill",
         source: "sr-protected",
         paint: {
-          "fill-color": "#5fa869",
-          "fill-opacity": 0.18,
-          "fill-outline-color": "#2c6c3c",
+          "fill-color": "#14b8a6",
+          "fill-opacity": 0.22,
+          "fill-outline-color": "#0f766e",
         },
       });
       map.addLayer({
@@ -104,21 +104,21 @@ export function SgdpMap({
         type: "line",
         source: "sr-protected",
         paint: {
-          "line-color": "#2c6c3c",
-          "line-width": 1.2,
+          "line-color": "#0f766e",
+          "line-width": 1.4,
           "line-dasharray": [2, 2],
         },
       });
 
-      // ─── Customary territories ─────────
+      // ─── Customary territories — GOUD ─────────
       map.addSource("sr-customary", { type: "geojson", data: customaryTerritories });
       map.addLayer({
         id: "customary-fill",
         type: "fill",
         source: "sr-customary",
         paint: {
-          "fill-color": "#ecc81d",
-          "fill-opacity": 0.25,
+          "fill-color": "#d4a818",
+          "fill-opacity": 0.28,
         },
       });
       map.addLayer({
@@ -126,12 +126,12 @@ export function SgdpMap({
         type: "line",
         source: "sr-customary",
         paint: {
-          "line-color": "#b8951a",
+          "line-color": "#92611a",
           "line-width": 1.6,
         },
       });
 
-      // ─── Concessies ─────────
+      // ─── Concessies — RODE FAMILIE per type ─────────
       map.addSource("sr-concessions", { type: "geojson", data: concessionGeometries });
       map.addLayer({
         id: "concessions-fill",
@@ -140,13 +140,13 @@ export function SgdpMap({
         paint: {
           "fill-color": [
             "match", ["get", "type"],
-            "mijnbouw", "#b40a2d",
-            "bosbouw",  "#7a5a14",
-            "landbouw", "#5fa869",
-            "olie_gas", "#5a0816",
-            "#94a299",
+            "mijnbouw", "#7a0b1f",
+            "bosbouw",  "#9a3412",
+            "landbouw", "#c2410c",
+            "olie_gas", "#3f1818",
+            "#7a0b1f",
           ],
-          "fill-opacity": 0.32,
+          "fill-opacity": 0.38,
         },
       });
       map.addLayer({
@@ -156,17 +156,17 @@ export function SgdpMap({
         paint: {
           "line-color": [
             "match", ["get", "type"],
-            "mijnbouw", "#7a0b1f",
-            "bosbouw",  "#5c4310",
-            "landbouw", "#2c6c3c",
-            "olie_gas", "#3d050f",
-            "#5a6a60",
+            "mijnbouw", "#3d050f",
+            "bosbouw",  "#5c1d09",
+            "landbouw", "#7c2d12",
+            "olie_gas", "#1a0809",
+            "#3d050f",
           ],
-          "line-width": 1.4,
+          "line-width": 1.6,
         },
       });
 
-      // ─── Percelen ─────────
+      // ─── Percelen — PAARSE FAMILIE per RRR-type ─────────
       map.addSource("sr-parcels", { type: "geojson", data: parcelGeometries });
       map.addLayer({
         id: "parcels-fill",
@@ -175,10 +175,10 @@ export function SgdpMap({
         paint: {
           "fill-color": [
             "match", ["get", "rrrType"],
-            "eigendom",  "#377e3f",
-            "erfpacht",  "#4a9152",
-            "grondhuur", "#94a299",
-            "#94a299",
+            "eigendom",  "#5b21b6",
+            "erfpacht",  "#7c3aed",
+            "grondhuur", "#a78bfa",
+            "#a78bfa",
           ],
           "fill-opacity": 0.55,
         },
@@ -189,14 +189,14 @@ export function SgdpMap({
         type: "line",
         source: "sr-parcels",
         paint: {
-          "line-color": "#2c6c3c",
-          "line-width": 0.6,
-          "line-opacity": 0.7,
+          "line-color": "#4c1d95",
+          "line-width": 0.7,
+          "line-opacity": 0.75,
         },
         minzoom: 7,
       });
 
-      // ─── Aanvragen (gekleurd op risico) ─────────
+      // ─── Aanvragen — ORANJE/RISICO-SCALE ─────────
       map.addSource("sr-applications", { type: "geojson", data: applicationGeometries });
       map.addLayer({
         id: "applications-fill",
@@ -205,13 +205,13 @@ export function SgdpMap({
         paint: {
           "fill-color": [
             "match", ["get", "riskLevel"],
-            "laag",      "#5fa869",
-            "middel",    "#ecc81d",
-            "hoog",      "#c92a48",
-            "zeer_hoog", "#5a0816",
+            "laag",      "#84cc16",
+            "middel",    "#f59e0b",
+            "hoog",      "#ea580c",
+            "zeer_hoog", "#9f1239",
             "#94a299",
           ],
-          "fill-opacity": 0.85,
+          "fill-opacity": 0.88,
         },
       });
       map.addLayer({
@@ -219,8 +219,8 @@ export function SgdpMap({
         type: "line",
         source: "sr-applications",
         paint: {
-          "line-color": "#14241a",
-          "line-width": 1.5,
+          "line-color": "#0c0a09",
+          "line-width": 1.6,
         },
       });
 
@@ -251,8 +251,8 @@ export function SgdpMap({
         paint: {
           "circle-radius": 7,
           "circle-color": "#ffffff",
-          "circle-stroke-color": "#1f4d2c",
-          "circle-stroke-width": 2.5,
+          "circle-stroke-color": "#1e3a8a",
+          "circle-stroke-width": 2.8,
         },
       });
       map.addLayer({
@@ -267,9 +267,9 @@ export function SgdpMap({
           "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"],
         },
         paint: {
-          "text-color": "#14241a",
+          "text-color": "#1e3a8a",
           "text-halo-color": "#ffffff",
-          "text-halo-width": 1.5,
+          "text-halo-width": 1.8,
         },
       });
 

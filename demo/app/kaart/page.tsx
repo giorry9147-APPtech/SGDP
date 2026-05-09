@@ -20,13 +20,13 @@ const SgdpMap = dynamic(() => import("@/components/map/sgdp-map").then(m => m.Sg
 });
 
 const layerDefs: { key: LayerKey; label: string; description: string; color: string }[] = [
-  { key: "customary",    label: "Traditionele woon- en leefgebieden (ITP)", description: "STDM-laag — Inheemse en Tribale Volken",  color: "#ecc81d" },
-  { key: "concessions",  label: "Concessies",                                 description: "Mijnbouw, bosbouw, landbouw",            color: "#b40a2d" },
-  { key: "protected",    label: "Beschermde gebieden",                        description: "Natuurreservaten, kustgebieden",         color: "#5fa869" },
-  { key: "parcels",      label: "Percelen (formele rechten)",                  description: "Eigendom, erfpacht, grondhuur",          color: "#377e3f" },
-  { key: "applications", label: "Aanvragen domeingrond",                      description: "Gekleurd op risiconiveau",                color: "#c92a48" },
-  { key: "communities",  label: "Gemeenschappen",                              description: "Inheemse + tribale dorpen",               color: "#1f4d2c" },
-  { key: "outline",      label: "Suriname (contour)",                          description: "Vereenvoudigde landgrens",                color: "#377e3f" },
+  { key: "customary",    label: "Traditionele woon- en leefgebieden (ITP)", description: "STDM-laag — Inheemse en Tribale Volken",  color: "#d4a818" },
+  { key: "concessions",  label: "Concessies",                                 description: "Mijnbouw, bosbouw, landbouw, olie/gas", color: "#7a0b1f" },
+  { key: "protected",    label: "Beschermde gebieden",                        description: "Natuurreservaten, kustgebieden",         color: "#0d9488" },
+  { key: "parcels",      label: "Percelen (formele rechten)",                  description: "Eigendom, erfpacht, grondhuur",          color: "#7c3aed" },
+  { key: "applications", label: "Aanvragen domeingrond",                      description: "Gekleurd op risiconiveau",                color: "#ea580c" },
+  { key: "communities",  label: "Gemeenschappen",                              description: "Inheemse + tribale dorpen",               color: "#1e3a8a" },
+  { key: "outline",      label: "Suriname (contour)",                          description: "Officiële Surinaamse grenzen",            color: "#377e3f" },
 ];
 
 export default function KaartPage() {
@@ -92,10 +92,10 @@ export default function KaartPage() {
             <h4 className="text-[11px] font-bold uppercase tracking-wider text-sr-ink-500 mb-2">Risiconiveau aanvragen</h4>
             <div className="space-y-1.5">
               {[
-                { label: "Laag",      color: "#5fa869" },
-                { label: "Middel",    color: "#ecc81d" },
-                { label: "Hoog",      color: "#c92a48" },
-                { label: "Zeer hoog", color: "#5a0816" },
+                { label: "Laag",      color: "#84cc16" },
+                { label: "Middel",    color: "#f59e0b" },
+                { label: "Hoog",      color: "#ea580c" },
+                { label: "Zeer hoog", color: "#9f1239" },
               ].map((r) => (
                 <div key={r.label} className="flex items-center gap-2 text-xs text-sr-ink-700">
                   <span className="size-3 rounded-sm" style={{ background: r.color }} />

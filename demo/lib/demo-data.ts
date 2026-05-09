@@ -1338,21 +1338,35 @@ export function expiryFlag(tenure: Tenure): ExpiryFlag {
 }
 
 // ─────────────────────────────────────────────────────────────────
-// Suriname grenslaag (sterk vereenvoudigd)
+// Suriname grenslaag — officiële Surinaamse positie
+// Inclusief Tigri/New River Triangle (zuidwest-claim t.o.v. Guyana)
+// en Marowijne/Litani-grens met Frans-Guyana.
+// Vereenvoudigde polygoon — niet kadastrale precisie.
 // ─────────────────────────────────────────────────────────────────
 export const surinameOutline: FeatureCollection<Polygon> = {
   type: "FeatureCollection",
   features: [{
     type: "Feature",
     id: "SR",
-    properties: { id: "SR", name: "Suriname (vereenvoudigd)" },
+    properties: { id: "SR", name: "Suriname (officiële grenzen)" },
     geometry: poly([
-      [-58.07, 6.00], [-57.30, 6.00], [-56.55, 5.95], [-55.85, 5.94],
-      [-55.10, 5.97], [-54.55, 6.05], [-54.05, 5.85], [-54.00, 5.45],
-      [-54.40, 4.85], [-54.10, 4.05], [-53.85, 3.65], [-54.00, 3.10],
-      [-54.45, 2.65], [-54.95, 2.30], [-55.55, 2.50], [-56.05, 1.90],
-      [-56.50, 1.95], [-56.85, 2.05], [-57.15, 2.45], [-57.45, 2.85],
-      [-57.85, 3.45], [-58.05, 3.95], [-58.10, 4.85], [-58.07, 6.00],
+      // ── Noordkust (Atlantische Oceaan, west → oost) ──
+      [-58.07, 6.00], [-57.55, 5.97], [-57.05, 6.02], [-56.50, 5.98],
+      [-55.95, 5.95], [-55.40, 5.94], [-54.85, 5.98], [-54.40, 6.02],
+      [-54.05, 5.85],
+      // ── Oostgrens (Marowijne / Maroni-rivier, met Frans-Guyana) ──
+      [-54.00, 5.45], [-54.20, 5.05], [-54.40, 4.65],
+      [-54.20, 4.20], [-54.05, 3.85], [-54.00, 3.45],
+      [-54.05, 3.10], [-54.20, 2.75],
+      // ── Zuidoost (Litani-rivier richting Tumuc-Humac) ──
+      [-54.50, 2.50], [-54.95, 2.30], [-55.50, 2.10],
+      // ── Zuidgrens (Tumuc-Humac-bergen) ──
+      [-56.10, 2.00], [-56.65, 1.95], [-57.10, 2.00],
+      // ── Tigri / New River Triangle (zuidwest, officiële SR-claim) ──
+      [-57.40, 2.20], [-57.65, 2.55], [-57.85, 2.95],
+      // ── Westgrens (Corantijn-rivier) ──
+      [-58.00, 3.45], [-58.05, 3.95], [-58.10, 4.45],
+      [-58.10, 5.00], [-58.07, 5.55], [-58.07, 6.00],
     ]),
   }],
 };
