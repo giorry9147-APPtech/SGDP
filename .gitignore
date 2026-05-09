@@ -1,0 +1,32 @@
+# Node / Next.js (in demo/)
+demo/node_modules/
+demo/.next/
+demo/out/
+demo/.turbo/
+demo/coverage/
+demo/.vercel/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.recommended.json
+
+# Build / cache
+*.tsbuildinfo
+next-env.d.ts

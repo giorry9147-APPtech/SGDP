@@ -1,0 +1,261 @@
+@import "tailwindcss";
+
+/*
+ * SGDP — Surinaamse overheidslook
+ * Geïnspireerd op de Surinaamse vlag: groen, wit, rood, met goud accent
+ */
+
+:root {
+  --sr-green-900: #1f4d2c;
+  --sr-green-800: #2c6c3c;
+  --sr-green-700: #377e3f;
+  --sr-green-600: #4a9152;
+  --sr-green-500: #5fa869;
+  --sr-green-100: #e6f1e8;
+  --sr-green-50:  #f4f9f5;
+
+  --sr-red-900:   #7a0b1f;
+  --sr-red-700:   #b40a2d;
+  --sr-red-600:   #c92a48;
+  --sr-red-100:   #fbe6ea;
+  --sr-red-50:    #fef4f6;
+
+  --sr-gold-700:  #b8951a;
+  --sr-gold-600:  #d4a818;
+  --sr-gold-500:  #ecc81d;
+  --sr-gold-100:  #fbf3cb;
+
+  --sr-cream:     #faf8f3;
+  --sr-paper:     #ffffff;
+  --sr-ink-900:   #14241a;
+  --sr-ink-700:   #2d3d33;
+  --sr-ink-500:   #5a6a60;
+  --sr-ink-300:   #94a299;
+  --sr-ink-100:   #d8ddd9;
+  --sr-line:      #e6ebe7;
+
+  --background: var(--sr-cream);
+  --foreground: var(--sr-ink-900);
+
+  --color-risk-low:    var(--sr-green-700);
+  --color-risk-medium: var(--sr-gold-600);
+  --color-risk-high:   var(--sr-red-700);
+  --color-risk-critical: #5a0816;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-sr-green-900: var(--sr-green-900);
+  --color-sr-green-800: var(--sr-green-800);
+  --color-sr-green-700: var(--sr-green-700);
+  --color-sr-green-600: var(--sr-green-600);
+  --color-sr-green-500: var(--sr-green-500);
+  --color-sr-green-100: var(--sr-green-100);
+  --color-sr-green-50:  var(--sr-green-50);
+
+  --color-sr-red-900: var(--sr-red-900);
+  --color-sr-red-700: var(--sr-red-700);
+  --color-sr-red-600: var(--sr-red-600);
+  --color-sr-red-100: var(--sr-red-100);
+  --color-sr-red-50:  var(--sr-red-50);
+
+  --color-sr-gold-700: var(--sr-gold-700);
+  --color-sr-gold-600: var(--sr-gold-600);
+  --color-sr-gold-500: var(--sr-gold-500);
+  --color-sr-gold-100: var(--sr-gold-100);
+
+  --color-sr-cream: var(--sr-cream);
+  --color-sr-paper: var(--sr-paper);
+  --color-sr-ink-900: var(--sr-ink-900);
+  --color-sr-ink-700: var(--sr-ink-700);
+  --color-sr-ink-500: var(--sr-ink-500);
+  --color-sr-ink-300: var(--sr-ink-300);
+  --color-sr-ink-100: var(--sr-ink-100);
+  --color-sr-line:    var(--sr-line);
+
+  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-serif: "Source Serif 4", Georgia, serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Officiële Surinaamse vlag-strepen — gebruikt in headers */
+.sr-flag-stripes {
+  background:
+    linear-gradient(to right,
+      var(--sr-green-700) 0%, var(--sr-green-700) 18%,
+      #ffffff 18%,           #ffffff 22%,
+      var(--sr-red-700) 22%, var(--sr-red-700) 78%,
+      #ffffff 78%,           #ffffff 82%,
+      var(--sr-green-700) 82%, var(--sr-green-700) 100%);
+}
+
+.sr-flag-bar {
+  height: 3px;
+  background:
+    linear-gradient(to right,
+      var(--sr-green-700) 0%, var(--sr-green-700) 25%,
+      #ffffff 25%,           #ffffff 33%,
+      var(--sr-red-700) 33%, var(--sr-red-700) 67%,
+      #ffffff 67%,           #ffffff 75%,
+      var(--sr-green-700) 75%, var(--sr-green-700) 100%);
+}
+
+/* Cards in officiële stijl */
+.sr-card {
+  background: var(--sr-paper);
+  border: 1px solid var(--sr-line);
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(20, 36, 26, 0.04);
+}
+
+.sr-card-emphasis {
+  background: var(--sr-paper);
+  border: 1px solid var(--sr-green-100);
+  border-left: 3px solid var(--sr-green-700);
+  border-radius: 4px;
+}
+
+/* Risico-badges */
+.sr-risk-low    { background: var(--sr-green-100); color: var(--sr-green-900); border: 1px solid var(--sr-green-500); }
+.sr-risk-medium { background: var(--sr-gold-100);  color: #6b5610;            border: 1px solid var(--sr-gold-600); }
+.sr-risk-high   { background: var(--sr-red-100);   color: var(--sr-red-900);  border: 1px solid var(--sr-red-700); }
+.sr-risk-critical { background: var(--sr-red-900); color: #fff;               border: 1px solid #3d050f; }
+
+/* Status-badges */
+.sr-status-pending  { background: var(--sr-ink-100); color: var(--sr-ink-700); }
+.sr-status-active   { background: var(--sr-green-100); color: var(--sr-green-900); }
+.sr-status-blocked  { background: var(--sr-red-100); color: var(--sr-red-900); }
+.sr-status-fpic     { background: var(--sr-gold-100); color: #6b5610; }
+
+/* Map fixes voor MapLibre */
+.maplibregl-canvas:focus { outline: none; }
+.maplibregl-popup-content {
+  border-radius: 6px !important;
+  box-shadow: 0 4px 12px rgba(20, 36, 26, 0.12) !important;
+  padding: 12px 14px !important;
+  font-family: var(--font-sans);
+}
+
+/* Smooth scrolling in dossier panels */
+.sr-scrollbar { scrollbar-width: thin; scrollbar-color: var(--sr-ink-300) transparent; }
+.sr-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+.sr-scrollbar::-webkit-scrollbar-thumb { background: var(--sr-ink-300); border-radius: 3px; }
+.sr-scrollbar::-webkit-scrollbar-track { background: transparent; }
+
+/* Officiële wapen-look (CSS-only) */
+.sr-coa {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--sr-gold-600);
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--sr-green-700), var(--sr-green-900));
+  color: var(--sr-gold-500);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+}
+
+/* Dashboard-tile hover */
+.sr-tile {
+  transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+}
+.sr-tile:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(20, 36, 26, 0.08);
+  border-color: var(--sr-green-500);
+}
+
+/* Pulse voor live/blocking indicators */
+@keyframes sr-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+.sr-pulse { animation: sr-pulse 2s ease-in-out infinite; }
+
+/* ─────────────────────────────────────────────
+   Print-styles voor adviesrapport (PDF-export)
+   "Save as PDF" via browser-print (Cmd/Ctrl-P)
+   ───────────────────────────────────────────── */
+@media print {
+  @page {
+    size: A4;
+    margin: 18mm 15mm 18mm 15mm;
+  }
+
+  /* Verberg alle UI behalve het adviesrapport-deel */
+  body * {
+    visibility: hidden;
+  }
+  .sr-print-area, .sr-print-area * {
+    visibility: visible;
+  }
+  .sr-print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 0;
+    background: #fff;
+  }
+
+  /* Geforceerd verbergen — niet alleen visibility */
+  .sr-print-hide {
+    display: none !important;
+  }
+
+  /* Vlag-stripes & officiële look ook in print */
+  .sr-flag-bar {
+    height: 4px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Kleuren afdrukken (badges, hero-kaders) */
+  .sr-card,
+  .sr-card-emphasis,
+  .sr-risk-low, .sr-risk-medium, .sr-risk-high, .sr-risk-critical,
+  .sr-status-pending, .sr-status-active, .sr-status-blocked, .sr-status-fpic,
+  [class*="bg-sr-"], [class*="border-sr-"] {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Geen page-break midden in een card */
+  .sr-card,
+  .sr-card-emphasis {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Lijsten niet halverwege breken */
+  ul, ol, table {
+    break-inside: avoid;
+  }
+
+  /* Hyperlinks tonen URL onnodig in print — alleen tekst */
+  a[href]::after { content: ""; }
+
+  /* Compactere typografie */
+  body { font-size: 10pt; line-height: 1.4; }
+  h1 { font-size: 18pt; }
+  h2 { font-size: 13pt; }
+  h3 { font-size: 11pt; }
+}
