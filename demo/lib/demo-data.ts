@@ -718,6 +718,7 @@ export const workgroupMembers = [
 export type Meeting = {
   id: string;
   date: string;
+  time?: string;
   type: "plenair" | "werkstroom" | "klankbord" | "veldconsultatie" | "stuur_president";
   title: string;
   location: string;
@@ -729,8 +730,75 @@ export type Meeting = {
 
 export const meetings: Meeting[] = [
   {
+    id: "MTG-2026-W20",
+    date: "2026-05-18",
+    time: "10:00",
+    type: "plenair",
+    title: "Plenaire werkgroep — week 20",
+    location: "Kabinet van de President, Paramaribo",
+    attendees: ["WG-01", "WG-02", "WG-03", "WG-04", "WG-05", "WG-06"],
+    agenda: [
+      "Vaststelling notulen W19",
+      "Aanbieding tussentijds rapport President (deadline vandaag)",
+      "FPIC-status overzicht — voortgang M3.2",
+      "Persmoment — coördinatie communicatie",
+    ],
+    decisions: [],
+    actionItemsCreated: 0,
+  },
+  {
+    id: "MTG-2026-VLD-DIITABIKI-2",
+    date: "2026-05-23",
+    time: "09:00",
+    type: "veldconsultatie",
+    title: "Vervolgsessie Diitabiki — besluitvorming gemeenschap",
+    location: "Diitabiki dorpscentrum",
+    attendees: ["WG-03", "WG-04", "Granman", "Kapiteins", "Dorpsraad", "VIDS-waarnemer"],
+    agenda: [
+      "Toelichting aanvullende kaart seizoensgebruik",
+      "Bespreking voorwaarden gemeenschap",
+      "Formele instemmings-stap",
+    ],
+    decisions: [],
+    actionItemsCreated: 0,
+  },
+  {
+    id: "MTG-2026-KLB-VIDS",
+    date: "2026-05-21",
+    time: "14:00",
+    type: "klankbord",
+    title: "Klankbordsessie VIDS — historische kaarten CT-002/CT-003",
+    location: "Kabinet van de President, Paramaribo",
+    attendees: ["WG-01", "WG-03", "WG-04", "VIDS-secretaris", "AdeKUS-onderzoeker"],
+    agenda: [
+      "Aanvulling historische kaarten vóór 1995",
+      "Validatie polygonen CT-002 en CT-003",
+      "Afspraken vervolgproces",
+    ],
+    decisions: [],
+    actionItemsCreated: 0,
+  },
+  {
+    id: "MTG-2026-W19",
+    date: "2026-05-11",
+    time: "10:00",
+    type: "plenair",
+    title: "Plenaire werkgroep — week 19",
+    location: "Kabinet van de President, Paramaribo",
+    attendees: ["WG-01", "WG-02", "WG-03", "WG-04", "WG-05", "WG-06"],
+    agenda: [
+      "Vaststelling notulen W18",
+      "Conceptrapport President — review hoofdstukken 1–3",
+      "Voortgang FPIC-trajecten",
+      "Voorbereiding klankbord VIDS (21 mei)",
+    ],
+    decisions: [],
+    actionItemsCreated: 0,
+  },
+  {
     id: "MTG-2026-W18",
     date: "2026-05-04",
+    time: "10:00",
     type: "plenair",
     title: "Plenaire werkgroep — week 18",
     location: "Kabinet van de President, Paramaribo",
@@ -753,6 +821,7 @@ export const meetings: Meeting[] = [
   {
     id: "MTG-2026-W17",
     date: "2026-04-27",
+    time: "10:00",
     type: "plenair",
     title: "Plenaire werkgroep — week 17",
     location: "Kabinet van de President, Paramaribo",
@@ -771,6 +840,7 @@ export const meetings: Meeting[] = [
   {
     id: "MTG-2026-VLD-DIITABIKI",
     date: "2026-05-02",
+    time: "09:30",
     type: "veldconsultatie",
     title: "Veldconsultatie Diitabiki — plenaire sessie",
     location: "Diitabiki dorpscentrum",
@@ -854,6 +924,26 @@ export const actionItems: ActionItem[] = [
   { id: "ACT-2026-098", description: "Risico-update RW-03 (basisdata MI-GLIS)", ownerId: "WG-06", dueDate: "2026-05-04", status: "achterstallig", workstream: "rapportage" },
   { id: "ACT-2026-099", description: "Afspraak met VIDS over klankbordsessie 21 mei", ownerId: "WG-03", dueDate: "2026-05-08", status: "in_uitvoering", workstream: "consultatie" },
   { id: "ACT-2026-088", description: "Stakeholderregister bijwerken — KAMPOS contactpersonen", ownerId: "WG-03", dueDate: "2026-04-20", status: "voltooid", workstream: "consultatie" },
+];
+
+// ─────────────────────────────────────────────────────────────────
+// Verhinderingen leden (afwezigheid / dienstreis / verlof)
+// ─────────────────────────────────────────────────────────────────
+export type MemberAbsence = {
+  id: string;
+  memberId: string;
+  startDate: string;
+  endDate: string;
+  type: "verlof" | "ziekte" | "dienstreis" | "overig";
+  reason: string;
+};
+
+export const memberAbsences: MemberAbsence[] = [
+  { id: "ABS-001", memberId: "WG-04", startDate: "2026-05-13", endDate: "2026-05-16", type: "dienstreis", reason: "Veldbezoek CT-002 Brokopondo — polygoon-validatie" },
+  { id: "ABS-002", memberId: "WG-02", startDate: "2026-05-15", endDate: "2026-05-15", type: "overig",      reason: "Ministeriële verplichting Binnenlandse Zaken" },
+  { id: "ABS-003", memberId: "WG-05", startDate: "2026-05-19", endDate: "2026-05-22", type: "dienstreis", reason: "Vergadering IACHR — Costa Rica" },
+  { id: "ABS-004", memberId: "WG-06", startDate: "2026-05-27", endDate: "2026-05-30", type: "verlof",      reason: "Verlof (familie)" },
+  { id: "ABS-005", memberId: "WG-03", startDate: "2026-05-23", endDate: "2026-05-23", type: "dienstreis", reason: "Vervolgsessie Diitabiki — veldconsultatie" },
 ];
 
 // ─────────────────────────────────────────────────────────────────
@@ -1369,4 +1459,61 @@ export const surinameOutline: FeatureCollection<Polygon> = {
       [-58.10, 5.00], [-58.07, 5.55], [-58.07, 6.00],
     ]),
   }],
+};
+
+// ─────────────────────────────────────────────────────────────────
+// Internationale grensgeschillen — gebieden die SR claimt maar waarvan
+// een buurland de souvereiniteit betwist (of andersom). Indicatieve
+// vereenvoudigde polygonen voor demo-doeleinden — niet kadastraal.
+// ─────────────────────────────────────────────────────────────────
+export type DisputedProps = {
+  id: string;
+  name: string;
+  counterparty: "Guyana" | "Frans-Guyana (Frankrijk)";
+  since: string;
+  status: string;
+  note: string;
+};
+
+export const disputedTerritories: FeatureCollection<Polygon, DisputedProps> = {
+  type: "FeatureCollection",
+  features: [
+    {
+      type: "Feature",
+      id: "DISP-001",
+      properties: {
+        id: "DISP-001",
+        name: "Tigri-gebied / New River Triangle",
+        counterparty: "Guyana",
+        since: "1936 / 1969",
+        status: "Officiële SR-claim — de facto onder Guyanees bestuur sinds 1969",
+        note: "Driehoek tussen Coeroeni- en New River-rivier; grenstraktaten Suriname en Brits-Guyana niet geratificeerd.",
+      },
+      geometry: poly([
+        [-58.00, 3.45],
+        [-57.60, 3.20],
+        [-57.30, 2.10],
+        [-57.85, 2.85],
+      ]),
+    },
+    {
+      type: "Feature",
+      id: "DISP-002",
+      properties: {
+        id: "DISP-002",
+        name: "Marowijne-bovenloop (Lawa/Litani)",
+        counterparty: "Frans-Guyana (Frankrijk)",
+        since: "19e eeuw — onopgelost",
+        status: "Geschil over welke rivier de werkelijke Marowijne is",
+        note: "Driehoek tussen Lawa- (FR-claim als grens) en Litani-rivier (SR-claim als grens), zuidoost SR.",
+      },
+      geometry: poly([
+        [-54.05, 3.10],
+        [-54.22, 2.75],
+        [-54.50, 2.50],
+        [-54.70, 2.70],
+        [-54.40, 2.95],
+      ]),
+    },
+  ],
 };

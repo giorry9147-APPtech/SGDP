@@ -14,7 +14,7 @@ import type { DemoUser } from "@/lib/auth-data";
 import { UserProvider } from "@/components/user-context";
 
 const nav = [
-  { href: "/",                label: "Executive Dashboard", icon: LayoutDashboard, badge: "PRESIDENT" },
+  { href: "/",                label: "Executive Dashboard",  icon: LayoutDashboard },
   { href: "/kaart",           label: "GIS-kaart",            icon: Map },
   { href: "/aanvragen",       label: "Aanvragen & Advies",   icon: FileText, hot: true },
   { href: "/fpic",            label: "FPIC & Consultatie",   icon: Users,    hot: true },
@@ -95,11 +95,6 @@ export function AppShell({ children, user }: { children: React.ReactNode; user: 
                   <span className="flex-1 truncate">{item.label}</span>
                   {item.hot && (
                     <span className="size-1.5 rounded-full bg-sr-red-700 sr-pulse" />
-                  )}
-                  {item.badge && (
-                    <span className="text-[9px] font-bold tracking-wider bg-sr-gold-500 text-sr-ink-900 px-1.5 py-0.5 rounded">
-                      {item.badge}
-                    </span>
                   )}
                   {active && <ChevronRight className="size-3.5 text-sr-green-700" />}
                 </Link>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import {
   AlertTriangle, FileText, Users, Workflow, Map, Target,
   CheckCircle2, Clock, AlertCircle, ChevronRight, TrendingUp, Calendar,
+  CalendarClock, UserX, CheckSquare, MapPin,
 } from "lucide-react";
 import { StatCard } from "@/components/ui/stat-card";
 import { PageHeader, SectionHeader } from "@/components/ui/section-header";
@@ -9,8 +10,17 @@ import { Badge, riskVariant, riskLabel } from "@/components/ui/badge";
 import {
   applications, communities, fpicProcesses, milestones,
   actionItems, decisions, customaryTerritories,
+  meetings, memberAbsences, workgroupMembers,
 } from "@/lib/demo-data";
 import { cn, formatDate, daysBetween } from "@/lib/utils";
+
+const TODAY = "2026-05-11";
+
+function memberInitials(id: string) {
+  const m = workgroupMembers.find((x) => x.id === id);
+  if (!m) return id.slice(0, 2);
+  return m.name.split(" ").map((s) => s[0]).join("").slice(0, 2);
+}
 
 export default function ExecutiveDashboard() {
   const openCases = applications.filter(a => !["beschikking", "afgewezen"].includes(a.status)).length;
@@ -36,6 +46,35 @@ export default function ExecutiveDashboard() {
     .filter(a => a.riskLevel === "zeer_hoog" || a.riskLevel === "hoog")
     .sort((a, b) => b.riskScore - a.riskScore)
     .slice(0, 4);
+
+  const upcomingMeetings = meetings
+    .filter((m) => m.date >= TODAY)
+    .sort((a, b) => a.date.localeCompare(b.date));
+  const nextWerkgroep = upcomingMeetings.find(
+    (m) => m.type === "plenair" || m.type === "werkstroom" || m.type === "stuur_president",
+  );
+  const nextStakeholder = upcomingMeetings.find(
+    (m) => m.type === "klankbord" || m.type === "veldconsultatie",
+  );
+
+  const windowEnd = new Date(TODAY);
+  windowEnd.setDate(windowEnd.getDate() + 21);
+  const windowEndIso = windowEnd.toISOString().slice(0, 10);
+  const upcomingAbsences = memberAbsences
+    .filter((a) => a.endDate >= TODAY && a.startDate <= windowEndIso)
+    .sort((a, b) => a.startDate.localeCompare(b.startDate));
+
+  const openByMember = workgroupMembers.map((m) => {
+    const own = actionItems.filter(
+      (a) => a.ownerId === m.id && (a.status === "open" || a.status === "in_uitvoering" || a.status === "achterstallig"),
+    );
+    const overdue = own.filter((a) => a.status === "achterstallig").length;
+    const dueSoon = own.filter((a) => {
+      const d = daysBetween(a.dueDate);
+      return d >= 0 && d <= 7;
+    }).length;
+    return { member: m, own, overdue, dueSoon };
+  });
 
   return (
     <div className="p-6 max-w-[1600px] mx-auto">
@@ -124,6 +163,74 @@ export default function ExecutiveDashboard() {
           icon={Workflow}
           variant={overdueActions > 0 ? "danger" : "default"}
         />
+      </div>
+
+      {/* Komende afspraken & verhinderingen */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+        <MeetingCard
+          variant="werkgroep"
+          meeting={nextWerkgroep}
+        />
+        <MeetingCard
+          variant="stakeholder"
+          meeting={nextStakeholder}
+        />
+        <div className="sr-card p-4">
+          <SectionHeader
+            icon={UserX}
+            title="Verhinderingen leden"
+            description="Komende 3 weken — afwezig, dienstreis of verlof."
+          />
+          {upcomingAbsences.length === 0 ? (
+            <div className="text-xs text-sr-ink-500 italic py-2">
+              Geen verhinderingen geregistreerd.
+            </div>
+          ) : (
+            <div className="space-y-1.5">
+              {upcomingAbsences.map((a) => {
+                const m = workgroupMembers.find((w) => w.id === a.memberId);
+                const startDays = daysBetween(a.startDate);
+                const sameDay = a.startDate === a.endDate;
+                return (
+                  <div key={a.id} className="flex items-start gap-2 text-xs">
+                    <div className={cn(
+                      "size-7 rounded-full shrink-0 flex items-center justify-center text-[10px] font-bold",
+                      a.memberId === "WG-01"
+                        ? "bg-sr-green-700 text-white"
+                        : "bg-sr-green-100 text-sr-green-900 border border-sr-green-500",
+                    )}>
+                      {memberInitials(a.memberId)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sr-ink-900 font-medium leading-tight truncate">
+                        {m?.name}
+                      </div>
+                      <div className="text-[11px] text-sr-ink-500 flex items-center gap-1.5 flex-wrap">
+                        <span>
+                          {sameDay
+                            ? formatDate(a.startDate, { day: "numeric", month: "short" })
+                            : `${formatDate(a.startDate, { day: "numeric", month: "short" })} – ${formatDate(a.endDate, { day: "numeric", month: "short" })}`}
+                        </span>
+                        <Badge
+                          variant={a.type === "dienstreis" ? "gold" : a.type === "ziekte" ? "red" : "neutral"}
+                          className="text-[9px]"
+                        >
+                          {a.type}
+                        </Badge>
+                        {startDays >= 0 && startDays <= 7 && (
+                          <span className="text-sr-gold-700 font-medium">
+                            {startDays === 0 ? "vandaag" : `over ${startDays}d`}
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-[10px] text-sr-ink-500 mt-0.5 truncate">{a.reason}</div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -264,6 +371,105 @@ export default function ExecutiveDashboard() {
         </div>
       </div>
 
+      {/* Actiepunten per lid (Assets-overzicht) */}
+      <div className="sr-card p-5 mt-6">
+        <SectionHeader
+          icon={CheckSquare}
+          title="Acties per lid"
+          description="Open actiepunten en deadlines per werkgroep-lid — wie heeft wat op zijn bord."
+          action={
+            <Link
+              href="/werkgroep"
+              className="text-xs font-medium text-sr-green-700 hover:text-sr-green-900 inline-flex items-center gap-1"
+            >
+              Werkgroep-werkruimte <ChevronRight className="size-3" />
+            </Link>
+          }
+        />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {openByMember.map(({ member, own, overdue, dueSoon }) => (
+            <div key={member.id} className="sr-card sr-tile p-3">
+              <div className="flex items-center gap-2.5 mb-2">
+                <div className={cn(
+                  "size-9 rounded-full shrink-0 flex items-center justify-center text-xs font-bold",
+                  member.id === "WG-01"
+                    ? "bg-sr-green-700 text-white"
+                    : "bg-sr-green-100 text-sr-green-900 border border-sr-green-500",
+                )}>
+                  {memberInitials(member.id)}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-semibold text-sr-ink-900 truncate">{member.name}</div>
+                  <div className="text-[10px] text-sr-ink-500 truncate">{member.role}</div>
+                </div>
+                <div className={cn(
+                  "shrink-0 size-8 rounded-md flex flex-col items-center justify-center text-[9px] font-bold leading-none",
+                  overdue > 0
+                    ? "bg-sr-red-100 text-sr-red-900 border border-sr-red-700"
+                    : own.length === 0
+                    ? "bg-sr-green-50 text-sr-green-700 border border-sr-green-500"
+                    : "bg-sr-ink-100 text-sr-ink-700 border border-sr-line",
+                )}>
+                  <span className="text-base font-bold">{own.length}</span>
+                  <span className="text-[8px] opacity-80">open</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-1.5 text-[10px] mb-1.5 flex-wrap">
+                {overdue > 0 && (
+                  <Badge variant="red" className="text-[9px]">
+                    <AlertCircle className="size-2.5" /> {overdue} achterstallig
+                  </Badge>
+                )}
+                {dueSoon > 0 && (
+                  <Badge variant="gold" className="text-[9px]">
+                    <Clock className="size-2.5" /> {dueSoon} binnen 7d
+                  </Badge>
+                )}
+                {own.length === 0 && (
+                  <span className="text-sr-green-700 inline-flex items-center gap-1">
+                    <CheckCircle2 className="size-3" /> alles afgehandeld
+                  </span>
+                )}
+              </div>
+              {own.length > 0 && (
+                <ul className="space-y-1 text-[11px] text-sr-ink-700">
+                  {own.slice(0, 2).map((a) => {
+                    const d = daysBetween(a.dueDate);
+                    return (
+                      <li key={a.id} className="flex items-start gap-1.5">
+                        <span className={cn(
+                          "size-1.5 rounded-full mt-1.5 shrink-0",
+                          a.status === "achterstallig" ? "bg-sr-red-700" :
+                          d <= 3 ? "bg-sr-gold-600" : "bg-sr-ink-300",
+                        )} />
+                        <span className="flex-1 leading-snug">
+                          <span className="line-clamp-1">{a.description}</span>
+                          <span className="text-[10px] text-sr-ink-500">
+                            {formatDate(a.dueDate)} ·{" "}
+                            <span className={cn(
+                              "font-medium",
+                              d < 0 ? "text-sr-red-700" :
+                              d <= 3 ? "text-sr-gold-700" : "text-sr-ink-500",
+                            )}>
+                              {d < 0 ? `${Math.abs(d)}d over` : d === 0 ? "vandaag" : `over ${d}d`}
+                            </span>
+                          </span>
+                        </span>
+                      </li>
+                    );
+                  })}
+                  {own.length > 2 && (
+                    <li className="text-[10px] text-sr-ink-500 pl-3">
+                      +{own.length - 2} meer
+                    </li>
+                  )}
+                </ul>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Top-3 risico's */}
       <div className="sr-card p-5 mt-6">
         <SectionHeader
@@ -290,6 +496,102 @@ export default function ExecutiveDashboard() {
             description="Voor inventarisatie van CT-002 en CT-003 ontbreken historische kaarten van vóór 1995. Aanvulling via klankbord met VIDS."
             action="Klankbord 21 mei"
           />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MeetingCard({
+  variant, meeting,
+}: {
+  variant: "werkgroep" | "stakeholder";
+  meeting: typeof meetings[number] | undefined;
+}) {
+  const isWg = variant === "werkgroep";
+  const title = isWg ? "Volgende werkgroep-vergadering" : "Volgende stakeholder-consultatie";
+  const desc = isWg
+    ? "Reminder voor voorzitter en leden — dag, tijd en locatie."
+    : "Klankbord, veldconsultatie of bilateraal overleg.";
+
+  if (!meeting) {
+    return (
+      <div className="sr-card p-4">
+        <SectionHeader icon={CalendarClock} title={title} description={desc} />
+        <div className="text-xs text-sr-ink-500 italic py-2">
+          Geen geplande {isWg ? "werkgroep-vergaderingen" : "stakeholder-consultaties"}.
+        </div>
+      </div>
+    );
+  }
+
+  const days = daysBetween(meeting.date);
+  const memberAttendees = meeting.attendees.filter((a) => a.startsWith("WG-"));
+  const externalCount = meeting.attendees.length - memberAttendees.length;
+
+  return (
+    <div className={cn(
+      "sr-card p-4 border-l-4",
+      isWg ? "border-l-sr-green-700" : "border-l-sr-gold-600",
+    )}>
+      <SectionHeader icon={CalendarClock} title={title} description={desc} />
+      <div className="flex items-start gap-3">
+        <div className={cn(
+          "size-14 rounded-md shrink-0 flex flex-col items-center justify-center",
+          isWg ? "bg-sr-green-100" : "bg-sr-gold-100",
+        )}>
+          <span className={cn(
+            "text-[10px] font-bold uppercase",
+            isWg ? "text-sr-green-700" : "text-sr-gold-700",
+          )}>
+            {new Date(meeting.date).toLocaleDateString("nl-NL", { month: "short" })}
+          </span>
+          <span className={cn(
+            "text-xl font-bold leading-none",
+            isWg ? "text-sr-green-900" : "text-sr-gold-700",
+          )}>
+            {new Date(meeting.date).getDate()}
+          </span>
+          {meeting.time && (
+            <span className="text-[9px] text-sr-ink-700 font-semibold mt-0.5 tabular-nums">
+              {meeting.time}
+            </span>
+          )}
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="text-sm font-semibold text-sr-ink-900 leading-tight mb-1 line-clamp-2">
+            {meeting.title}
+          </div>
+          <div className="text-[11px] text-sr-ink-700 mb-1.5">
+            {formatDate(meeting.date, { weekday: "long", day: "numeric", month: "long" })}
+            {meeting.time && <> · <span className="font-semibold">{meeting.time}</span></>}
+          </div>
+          <div className="text-[11px] text-sr-ink-500 flex items-start gap-1 mb-2">
+            <MapPin className="size-3 mt-0.5 shrink-0" />
+            <span className="line-clamp-1">{meeting.location}</span>
+          </div>
+          <div className="flex items-center gap-1.5 flex-wrap text-[10px]">
+            <Badge variant={isWg ? "green" : "gold"} className="text-[9px]">
+              {meeting.type.replace(/_/g, " ")}
+            </Badge>
+            {memberAttendees.length > 0 && (
+              <span className="text-sr-ink-500">
+                {memberAttendees.length} leden{externalCount > 0 ? ` · +${externalCount} extern` : ""}
+              </span>
+            )}
+            <span className={cn(
+              "ml-auto font-semibold tabular-nums",
+              days < 0 ? "text-sr-ink-500" :
+              days === 0 ? "text-sr-red-700" :
+              days <= 3 ? "text-sr-gold-700" :
+              "text-sr-green-700",
+            )}>
+              {days < 0 ? `${Math.abs(days)}d geleden` :
+               days === 0 ? "VANDAAG" :
+               days === 1 ? "morgen" :
+               `over ${days}d`}
+            </span>
+          </div>
         </div>
       </div>
     </div>

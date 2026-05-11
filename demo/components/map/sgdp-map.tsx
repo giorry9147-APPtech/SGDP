@@ -6,14 +6,14 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import {
   surinameOutline, customaryTerritories, concessionGeometries,
   protectedAreas, parcelGeometries, applicationGeometries,
-  communities, applications, concessions,
+  communities, applications, concessions, disputedTerritories,
 } from "@/lib/demo-data";
 
 export type LayerKey =
   | "outline" | "customary" | "concessions" | "protected"
-  | "parcels" | "applications" | "communities";
+  | "parcels" | "applications" | "communities" | "disputed";
 
-const ALL_LAYERS: LayerKey[] = ["outline", "customary", "concessions", "protected", "parcels", "applications", "communities"];
+const ALL_LAYERS: LayerKey[] = ["outline", "customary", "concessions", "protected", "parcels", "applications", "communities", "disputed"];
 
 export function SgdpMap({
   layers = ALL_LAYERS,
@@ -38,19 +38,19 @@ export function SgdpMap({
       style: {
         version: 8,
         sources: {
-          "carto-light": {
+          "carto-voyager": {
             type: "raster",
             tiles: [
-              "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png",
-              "https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png",
-              "https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png",
+              "https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png",
+              "https://b.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png",
+              "https://c.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png",
             ],
             tileSize: 256,
             attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · © <a href="https://carto.com/">CARTO</a>',
           },
         },
         layers: [
-          { id: "carto-light-layer", type: "raster", source: "carto-light" },
+          { id: "carto-voyager-layer", type: "raster", source: "carto-voyager" },
         ],
       },
       center: [-55.5, 4.5],
@@ -73,7 +73,7 @@ export function SgdpMap({
         source: "sr-outline",
         paint: {
           "fill-color": "#f4f9f5",
-          "fill-opacity": 0.5,
+          "fill-opacity": 0.12,
         },
       });
       map.addLayer({
@@ -81,9 +81,9 @@ export function SgdpMap({
         type: "line",
         source: "sr-outline",
         paint: {
-          "line-color": "#377e3f",
-          "line-width": 2,
-          "line-opacity": 0.6,
+          "line-color": "#1f5128",
+          "line-width": 2.4,
+          "line-opacity": 0.85,
         },
       });
 
@@ -224,6 +224,44 @@ export function SgdpMap({
         },
       });
 
+      // ─── Internationale grensgeschillen — ROOD GESTREEPT ─────────
+      map.addSource("sr-disputed", { type: "geojson", data: disputedTerritories });
+      map.addLayer({
+        id: "disputed-fill",
+        type: "fill",
+        source: "sr-disputed",
+        paint: {
+          "fill-color": "#dc2626",
+          "fill-opacity": 0.18,
+        },
+      });
+      map.addLayer({
+        id: "disputed-line",
+        type: "line",
+        source: "sr-disputed",
+        paint: {
+          "line-color": "#991b1b",
+          "line-width": 2.2,
+          "line-dasharray": [3, 2],
+        },
+      });
+      map.addLayer({
+        id: "disputed-label",
+        type: "symbol",
+        source: "sr-disputed",
+        layout: {
+          "text-field": "BETWIST",
+          "text-size": 10,
+          "text-letter-spacing": 0.18,
+          "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"],
+        },
+        paint: {
+          "text-color": "#7f1d1d",
+          "text-halo-color": "#ffffff",
+          "text-halo-width": 1.6,
+        },
+      });
+
       // ─── Community-markers ─────────
       const commFeatures = communities.map((c) => {
         const territory = customaryTerritories.features.find(f => f.properties?.communityId === c.id);
@@ -289,6 +327,7 @@ export function SgdpMap({
           return `<strong>${p.caseNumber}</strong><br/>${app ? `<span style="color:#5a6a60">${app.applicantName}</span><br/><span style="color:#5a6a60">Risico: ${app.riskLevel}</span>` : ""}`;
         }],
         ["communities-circle", "communities", (p) => `<strong>${p.name}</strong><br/><span style="color:#5a6a60">${p.peopleGroup === "inheems" ? "Inheems" : "Tribaal/Marron"}</span>`],
+        ["disputed-fill", "disputed", (p) => `<strong>${p.name}</strong><br/><span style="color:#5a6a60">Tegenpartij: ${p.counterparty}</span><br/><span style="color:#5a6a60">Sinds: ${p.since}</span><br/><span style="color:#7f1d1d">${p.status}</span>`],
       ];
 
       for (const [layerId, layerKey, contentFn] of interactiveLayers) {
@@ -326,6 +365,7 @@ export function SgdpMap({
       parcels:      ["parcels-fill", "parcels-line"],
       applications: ["applications-fill", "applications-line"],
       communities:  ["communities-circle", "communities-label"],
+      disputed:     ["disputed-fill", "disputed-line", "disputed-label"],
     };
     for (const k of ALL_LAYERS) {
       const visible = layers.includes(k);

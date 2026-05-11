@@ -7,7 +7,7 @@ import { PageHeader } from "@/components/ui/section-header";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { LayerKey } from "@/components/map/sgdp-map";
-import { applications, communities, concessions, customaryTerritories, protectedAreas } from "@/lib/demo-data";
+import { applications, communities, concessions, customaryTerritories, disputedTerritories, protectedAreas } from "@/lib/demo-data";
 
 // MapLibre is pure client-side
 const SgdpMap = dynamic(() => import("@/components/map/sgdp-map").then(m => m.SgdpMap), {
@@ -27,10 +27,11 @@ const layerDefs: { key: LayerKey; label: string; description: string; color: str
   { key: "applications", label: "Aanvragen domeingrond",                      description: "Gekleurd op risiconiveau",                color: "#ea580c" },
   { key: "communities",  label: "Gemeenschappen",                              description: "Inheemse + tribale dorpen",               color: "#1e3a8a" },
   { key: "outline",      label: "Suriname (contour)",                          description: "Officiële Surinaamse grenzen",            color: "#377e3f" },
+  { key: "disputed",     label: "Internationale grensgeschillen",              description: "Tigri (Guyana) + Marowijne-bovenloop",    color: "#dc2626" },
 ];
 
 export default function KaartPage() {
-  const [activeLayers, setActiveLayers] = useState<LayerKey[]>(["outline", "customary", "concessions", "protected", "applications", "communities"]);
+  const [activeLayers, setActiveLayers] = useState<LayerKey[]>(["outline", "customary", "concessions", "protected", "applications", "communities", "disputed"]);
   const [selected, setSelected] = useState<{ layer: LayerKey; properties: Record<string, unknown> } | null>(null);
 
   const toggle = (k: LayerKey) =>
@@ -216,6 +217,21 @@ function FeatureDetail({ layer, properties }: { layer: LayerKey; properties: Rec
         <div className="font-semibold text-sr-ink-900">{String(properties.name)}</div>
         <div className="text-sr-ink-500">Categorie: {String(properties.category)}</div>
         <div className="text-sr-ink-500">{(properties.areaHa as number).toLocaleString("nl-NL")} ha</div>
+      </div>
+    );
+  }
+  if (layer === "disputed") {
+    const d = disputedTerritories.features.find(f => f.properties.id === properties.id);
+    if (!d) return null;
+    return (
+      <div className="text-xs space-y-1.5">
+        <div className="font-semibold text-sr-ink-900">{d.properties.name}</div>
+        <div className="text-sr-ink-500">Tegenpartij: <strong>{d.properties.counterparty}</strong></div>
+        <div className="text-sr-ink-500">Sinds: {d.properties.since}</div>
+        <div className="bg-sr-red-50 border border-sr-red-100 rounded p-1.5 text-sr-red-900 mt-1">
+          {d.properties.status}
+        </div>
+        <div className="text-sr-ink-500 text-[11px] leading-snug pt-1">{d.properties.note}</div>
       </div>
     );
   }
