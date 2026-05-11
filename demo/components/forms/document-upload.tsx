@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import {
-  Paperclip, Upload, FileText, Image as ImageIcon, Film, Music, X,
+  Paperclip, Upload, FileText, Image as ImageIcon, Film, Music, X, Download,
 } from "lucide-react";
 import { useSgdpStore, type EntityType } from "@/lib/store";
 import { useUser } from "@/components/user-context";
@@ -47,9 +47,9 @@ export function DocumentUpload({
   const addDocuments = useSgdpStore((s) => s.addDocuments);
   const removeDocument = useSgdpStore((s) => s.removeDocument);
 
-  const handleFiles = (files: FileList | null) => {
+  const handleFiles = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
-    addDocuments(entityType, entityId, Array.from(files), {
+    await addDocuments(entityType, entityId, Array.from(files), {
       userId: user.userId,
       name: user.name,
     });
@@ -123,6 +123,24 @@ export function DocumentUpload({
                     {formatBytes(doc.size)} · {doc.uploadedByName} · {formatDate(doc.uploadedAt)}
                   </div>
                 </div>
+                {doc.dataUrl ? (
+                  <a
+                    href={doc.dataUrl}
+                    download={doc.name}
+                    aria-label="Downloaden"
+                    title="Downloaden"
+                    className="size-6 rounded-md flex items-center justify-center text-sr-green-700 hover:bg-sr-green-50 hover:text-sr-green-900 transition-colors shrink-0"
+                  >
+                    <Download className="size-3.5" />
+                  </a>
+                ) : (
+                  <span
+                    title="Bestand te groot voor demo-opslag (> 3 MB); download niet beschikbaar"
+                    className="text-[9px] text-sr-ink-400 px-1 self-center"
+                  >
+                    te groot
+                  </span>
+                )}
                 <button
                   type="button"
                   onClick={() => removeDocument(doc.id)}

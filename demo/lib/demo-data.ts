@@ -711,7 +711,7 @@ export const workgroupMembers = [
   { id: "WG-02", name: "Armand Jurel",      role: "Lid",                               workstream: "decentralisatie" },
   { id: "WG-03", name: "Theresia Cirino",   role: "Lid",                               workstream: "consultatie" },
   { id: "WG-04", name: "Mike Nerkust",      role: "Lid",                               workstream: "inventarisatie_gis" },
-  { id: "WG-05", name: "Martin Misiedjan",  role: "Lid (juridisch)",                   workstream: "juridisch" },
+  { id: "WG-05", name: "Martin Misiedjan",  role: "Lid",                               workstream: "juridisch" },
   { id: "WG-06", name: "Sarwan Ramai",      role: "Lid",                               workstream: "decentralisatie" },
 ] as const;
 

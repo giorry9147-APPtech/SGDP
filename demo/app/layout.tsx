@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { AppShell } from "@/components/layout/app-shell";
+import { SharedSync } from "@/components/shared-sync";
 import { getCurrentUser } from "@/lib/auth";
 import "./globals.css";
 
@@ -28,7 +29,14 @@ export default async function RootLayout({
   return (
     <html lang="nl" className={`${inter.variable} h-full antialiased`}>
       <body className="min-h-full">
-        {user ? <AppShell user={user}>{children}</AppShell> : children}
+        {user ? (
+          <>
+            <SharedSync />
+            <AppShell user={user}>{children}</AppShell>
+          </>
+        ) : (
+          children
+        )}
       </body>
     </html>
   );

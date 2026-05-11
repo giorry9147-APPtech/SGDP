@@ -6,6 +6,11 @@ demo/.turbo/
 demo/coverage/
 demo/.vercel/
 
+# Demo runtime: server-side gedeelde state (vergaderingen, besluiten,
+# actiepunten, document-uploads) — niet committen.
+demo/.shared-state.json
+demo/.shared-state.json.tmp
+
 # Logs
 *.log
 npm-debug.log*

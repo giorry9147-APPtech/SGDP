@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Demo runtime: server-side gedeelde state
+.shared-state.json
+.shared-state.json.tmp

@@ -17,7 +17,7 @@ export const demoUsers: DemoUser[] = [
   { userId: "WG-02", username: "armand.jurel",     password: "sgdp2026", name: "Armand Jurel",     role: "Lid",                                workstream: "decentralisatie" },
   { userId: "WG-03", username: "theresia.cirino",  password: "sgdp2026", name: "Theresia Cirino",  role: "Lid",                                workstream: "consultatie" },
   { userId: "WG-04", username: "mike.nerkust",     password: "sgdp2026", name: "Mike Nerkust",     role: "Lid",                                workstream: "inventarisatie_gis" },
-  { userId: "WG-05", username: "martin.misiedjan", password: "sgdp2026", name: "Martin Misiedjan", role: "Lid (juridisch)",                    workstream: "juridisch" },
+  { userId: "WG-05", username: "martin.misiedjan", password: "sgdp2026", name: "Martin Misiedjan", role: "Lid",                                workstream: "juridisch" },
   { userId: "WG-06", username: "sarwan.ramai",     password: "sgdp2026", name: "Sarwan Ramai",     role: "Lid",                                workstream: "decentralisatie" },
 ];
 

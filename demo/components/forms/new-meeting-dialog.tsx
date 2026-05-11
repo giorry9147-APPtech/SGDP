@@ -76,7 +76,7 @@ export function NewMeetingDialog() {
       </DialogTrigger>
       <DialogContent
         title="Nieuwe vergadering plannen"
-        description="Velden conform doc 02 §2.2 — type, agenda, aanwezigen. Demo: bewaard in browser-localStorage; productie: PostgreSQL + audit-trail."
+        description="Velden conform doc 02 §2.2 — type, agenda, aanwezigen. Demo: server-side gedeeld (alle ingelogde leden zien dit); productie: PostgreSQL + audit-trail."
       >
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Type */}
