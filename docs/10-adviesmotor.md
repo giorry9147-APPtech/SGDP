@@ -4,7 +4,7 @@
 
 Per dossier (case) genereert het systeem een **gestructureerd adviesrapport** met onderbouwing. De adviesmotor is **regelgebaseerd**, **transparant** en **uitlegbaar**. Geen black-box.
 
-## 10.2 Vijf adviescategorieën
+## 10.2 Zes adviescategorieën
 
 | Categorie | Vraag die beantwoord wordt | Doelpubliek |
 |---|---|---|
@@ -13,6 +13,9 @@ Per dossier (case) genereert het systeem een **gestructureerd adviesrapport** me
 | **3. Ruimtelijk** | Overlapt de aanvraag met bestaande objecten of bestemmingen? | Landmeters / planners |
 | **4. Sociaal / FPIC** | Welke gemeenschap is betrokken? Is consultatie/FPIC nodig? | Werkgroep / ITP-stakeholders |
 | **5. Beleid** | Wat zegt dit over patronen — hotspots, ontbrekende registratie, demarcatieprioriteiten? | President / werkgroep |
+| **6. Bestuurlijk-financieel** | Welk district/ressort krijgt welke opbrengst? Welke WRO-bevoegdheid is van toepassing? Bestaat conflict met centrale wetgeving? Hoort er een ITP-royalty bij? | Werkgroep / Min. Fin. / DR-leden / ITP-koepels |
+
+> Categorie 6 is toegevoegd voor het tweede mandaatspoor van de werkgroep (decentralisatie). Volledige context in [docs/19](19-wro-decentralisatie.md), [20](20-financien-districtsfonds.md), [21](21-koppeling-grond-fondsen.md).
 
 ## 10.3 Werking van de motor
 
@@ -188,7 +191,79 @@ Regels in **YAML**:
   finding: "Dit district vertoont een verhoogde conflictdichtheid. Overweeg gebiedsgerichte demarcatieaanpak."
   weight: low
   scope: policy_aggregate
+
+# ────────────────────────────────────────────────────────
+# Categorie 6 — Bestuurlijk-financieel (WRO-spoor)
+# Volledige context: docs/19, docs/20, docs/21
+# ────────────────────────────────────────────────────────
+
+- id: BF-01
+  category: bestuurlijk-financieel
+  description: Concessie of grondhuur → opbrengstaandeel naar DistrictFund
+  when:
+    rrr_type_in: ["concession_mining", "concession_forestry", "concession_agriculture", "lease_grondhuur"]
+    spatial_unit.in_administrative_unit: "district"
+  finding: "Aanvraag {case_id} ligt in district {district_name}. Volgens Interimregeling Financiële Decentralisatie dient een aandeel van de opbrengst naar DistrictFund {district_name}."
+  weight: medium
+  legal_basis: ["Interimregeling_2003", "WRO_2006_134"]
+  triggers: ["create_revenue_source_proposal"]
+
+- id: BF-02
+  category: bestuurlijk-financieel
+  description: Eigen tarief vóór Level-2-certificering = niet toegestaan
+  when:
+    regional_decision.competence_type: "belastingheffing"
+    administrative_unit.level2_certified: false
+  finding: "District {district_name} stelt een eigen tarief vast zonder Level-2-certificering. Niet rechtsgeldig tot certificering door Ministerie BiZa."
+  weight: high
+  blocks_decision: true
+  legal_basis: ["Level2_certificeringskader"]
+
+- id: BF-03
+  category: bestuurlijk-financieel
+  description: DC-pet-conflict (DC als voorzitter DR)
+  when:
+    regional_body.body_type: "DR"
+    regional_body.chairperson_party_id: "== regional_body.dc_party_id"
+    legal_regime.wro_version: "< ontwerp_2026_a"
+  finding: "Districtscommissaris {dc_name} is tevens voorzitter van Districtsraad {district_name}. Belangenconflict; te schrappen onder aanstaande DC-ontkoppelingswet."
+  weight: medium
+  legal_basis: ["Ontwerpwet_DC_Ontkoppeling_2026"]
+
+- id: BF-04
+  category: bestuurlijk-financieel
+  description: Districtsverordening conflicteert met Comptabiliteitswet
+  when:
+    regional_decision.competence_type: "verordening"
+    central_budget_conflict: true
+  finding: "Districtsbesluit {regional_decision_id} botst met centrale begrotingsdiscipline ({comptabiliteit_artikel}). Min. Fin.-review vereist."
+  weight: medium
+  legal_basis: ["Comptabiliteitswet", "WRO_S.B._1989_44"]
+  triggers: ["min_fin_review_required"]
+
+- id: BF-05
+  category: bestuurlijk-financieel
+  description: RR-/DR-besluit overschrijdt bevoegdheid
+  when:
+    regional_decision.competence_id: null
+  finding: "Besluit {regional_decision_id} mist een dekkende Competence-verwijzing in WRO of bijbehorende wetgeving."
+  weight: high
+  blocks_decision: true
+
+- id: BF-06
+  category: bestuurlijk-financieel
+  description: Concessie in customary_territory → opbrengstaandeel naar ITP-gemeenschap
+  when:
+    rrr_type_in: ["concession_mining", "concession_forestry", "concession_agriculture", "lease_grondhuur"]
+    overlap_with: "customary_territory"
+    overlap_pct: ">0"
+  finding: "Aanvraag {case_id} overlapt voor {pct}% met traditioneel woon- en leefgebied van gemeenschap {community_name}. Voorgesteld verdeelmodel (scenario {scenario}): centraal {pct_central}%, district {pct_district}%, gemeenschap {pct_itp}%. Definitieve verdeling vereist FPIC + DNA-bekrachtiging."
+  weight: high
+  triggers: ["fpic_required", "benefit_share_proposal"]
+  legal_basis: ["IACHR_Saramaka_2007", "WRO_Interimregeling_2003", "Ontwerpwet_Collectieve_Rechten_ITP"]
 ```
+
+Volledige uitwerking en verdeelscenario's: [docs/21 §21.3–§21.4](21-koppeling-grond-fondsen.md).
 
 ## 10.6 Voorbeeldadviezen (gegenereerde tekst)
 

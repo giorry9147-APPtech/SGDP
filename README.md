@@ -43,6 +43,11 @@ Het project bestaat uit twee complementaire sporen die in deze documentatie stri
 - [docs/17-milieu-nma.md](docs/17-milieu-nma.md) — Milieu Raamwet, NMA, MEA/SEA/MER, vergunningenregister, rehabilitatie
 - [docs/18-grondhuur-conversie.md](docs/18-grondhuur-conversie.md) — Grondhuur (15–40 jaar), verlenging, conversie, vervallenverklaring, compensatie
 
+### Decentralisatiespoor (tweede pijler werkgroep)
+- [docs/19-wro-decentralisatie.md](docs/19-wro-decentralisatie.md) — Wet Regionale Organen, DR/RR/DC, geplande wetswijzigingen 2026
+- [docs/20-financien-districtsfonds.md](docs/20-financien-districtsfonds.md) — Districtsfonds, eigen middelen, Interimregeling, Level-2-certificering
+- [docs/21-koppeling-grond-fondsen.md](docs/21-koppeling-grond-fondsen.md) — Koppeling grondopbrengsten ↔ districtsfondsen ↔ ITP-royalties (kernpunt werkgroep)
+
 ---
 
 ## Snelle samenvatting
@@ -57,3 +62,5 @@ Het project bestaat uit twee complementaire sporen die in deze documentatie stri
 3. **Configurabel rond bewegende wetgeving** — ontwerpwetten worden via regelconfiguratie meegenomen, niet hardcoded.
 
 **Demo-scope.** Zeven kernmodules: digitale aanvraag, dossierupload, GIS-kaart, overlap-check, conflict-risicoscore, adviesrapport, admin-dashboard. Zie [docs/07-mvp-demo-scope.md](docs/07-mvp-demo-scope.md).
+
+**Twee pijlers, gelijkwaardig.** Naast het grondenrechten-spoor (docs 04, 11, 15, 17, 18) wordt het **decentralisatie-spoor** volwaardig uitgewerkt in docs [19](docs/19-wro-decentralisatie.md), [20](docs/20-financien-districtsfonds.md) en [21](docs/21-koppeling-grond-fondsen.md). Het snijvlak — opbrengsten uit exploitatie naar district én ITP-gemeenschap — is het hart van het werkgroep-mandaat ([21](docs/21-koppeling-grond-fondsen.md)).

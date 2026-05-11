@@ -54,7 +54,7 @@
 
 ### FR-6 Adviesrapport-generator
 - FR-6.1 **MUST** Per dossier kan een gestructureerd adviesrapport worden gegenereerd.
-- FR-6.2 **MUST** Rapport bevat 5 categorieën: administratief, juridisch, ruimtelijk, sociaal/FPIC, beleid.
+- FR-6.2 **MUST** Rapport bevat **6 categorieën**: administratief, juridisch, ruimtelijk, sociaal/FPIC, beleid, **bestuurlijk-financieel** (zie [10-adviesmotor.md §10.2](10-adviesmotor.md)).
 - FR-6.3 **MUST** Onderbouwing per advies (welk regel, welk bewijs, welke bron).
 - FR-6.4 **SHOULD** Export PDF en bewerkbaar markdown.
 - FR-6.5 **COULD** Vrije-tekst-uitleg met LLM (met menselijke toets).
@@ -137,8 +137,43 @@
 - FR-18.3 **WON'T (now), roadmap** Volledige overheids-PKI-keten met andere organen.
 
 ### FR-19 Configurabele wetregimes
-- FR-19.1 **MUST** Per zaak wordt het toepasselijke wetregime vastgelegd (`domeingrond_decreet_version`, `glis_inschrijvingsbesluit_version`, `collectieve_rechten_status`, `privacy_regime`, `wro_regime`).
+- FR-19.1 **MUST** Per zaak wordt het toepasselijke wetregime vastgelegd (`domeingrond_decreet_version`, `glis_inschrijvingsbesluit_version`, `collectieve_rechten_status`, `privacy_regime`, `wro_version`, `financiele_autonomie_version`, `dc_ontkoppeling_status`, `comptabiliteitswet_version`).
 - FR-19.2 **SHOULD** Regelset in adviesmotor is uitwisselbaar zonder code-deploy ([10-adviesmotor.md §10.9](10-adviesmotor.md#109-beheer-en-versionering-van-regels)).
+- FR-19.3 **MUST** WRO-wetshistorie (1989 + S.B. 2000/2002/2005/2015 + ontwerpwetten 2026) is versioned vastgelegd in `LegalProvision` ([08 §8.8.4](08-data-model.md)).
+
+### FR-20 Bestuurlijke entiteiten (WRO)
+- FR-20.1 **MUST** Datamodel bevat `AdministrativeUnit` voor 10 districten en 62 ressorten met officiële SR-grenzen.
+- FR-20.2 **MUST** Elke `LA_SpatialUnit` wordt geografisch toegewezen aan precies één ressort (en daarmee aan één district).
+- FR-20.3 **MUST** GIS-kaart heeft administratieve laag (district + ressort) met filter.
+- FR-20.4 **MUST** `RegionalBody` (DR/RR/DC) per administratieve eenheid, met `chairperson_party_id` apart van `dc_party_id` (vooruitlopend op DC-ontkoppelingswet).
+- FR-20.5 **SHOULD** `Competence` koppelt bevoegdheden aan organen en bronartikelen.
+- FR-20.6 **SHOULD** `RegionalDecision` registreert DR-/RR-besluiten met stemverhouding en bevoegdheidsdekking.
+- FR-20.7 **WON'T (now), roadmap** Volledige DR/RR-werkruimte (analoog aan werkgroep-werkruimte) — fase 1.
+
+### FR-21 Financiële Decentralisatie / Districtsfonds
+- FR-21.1 **MUST** `DistrictFund` per district per begrotingsjaar, met `algemene_afdracht`, `eigen_inkomsten`, `uitgaven`, `saldo`.
+- FR-21.2 **MUST** `RevenueSource` typed naar Interimregeling-categorieën (huurwaarde, vermakelijkheid, leges, marktgeld, parkeergeld, concessie-royalty, grondhuur-aandeel, ITP-royalty-aandeel).
+- FR-21.3 **MUST** Elke `RevenueSource` is herleidbaar naar `linked_rrr_id` en/of `linked_spatial_unit_id`.
+- FR-21.4 **MUST** Level-2-certificering per district vastgelegd; adviesregel `BF-02` blokkeert eigen tarief zonder certificering.
+- FR-21.5 **SHOULD** District-portaal met fondspagina (lichte versie in demo, fictieve cijfers).
+- FR-21.6 **SHOULD** Adviesregel `BF-04` signaleert conflicten met Comptabiliteitswet.
+- FR-21.7 **WON'T (now), roadmap** Daadwerkelijke koppeling Ministerie van Financiën / CBvS grootboek — fase 2.
+- FR-21.8 **WON'T (now), roadmap** Fiscaal-simulator — fase 4.
+
+### FR-22 Benefit sharing (koppeling grond ↔ fondsen ↔ ITP)
+- FR-22.1 **MUST** `BenefitShare`-entiteit verbindt concessie/grondhuur ↔ district ↔ ITP-gemeenschap met verdeelpercentages.
+- FR-22.2 **MUST** Adviesregel `BF-06` triggert bij overlap concessie ↔ `customary_territory` en stelt scenario (A/B/C/D) voor.
+- FR-22.3 **MUST** `BenefitShare` is onlosmakelijk gekoppeld aan een `FPIC_Process`; status `proposed` → `under_fpic` → `agreed` → `ratified`.
+- FR-22.4 **MUST** Bekrachtiging vereist meerdere ratificaties (`ratified_by` json: bv. `dna_resolution`, `min_fin_decree`, `community_consent`).
+- FR-22.5 **SHOULD** Adviesrapport categorie 6 toont voorgestelde verdeling met juridische onderbouwing (IACHR Saramaka, WRO Interimregeling).
+- FR-22.6 **WON'T (now), roadmap** Periodieke royalty-monitoring met afwijkingssignalering — fase 3.
+- FR-22.7 **WON'T (now), roadmap** Hash-verankerde benefit-keten + IACHR-rapportage — fase 4.
+
+### FR-23 Wet- & bevoegdhedenbibliotheek
+- FR-23.1 **MUST** Publiek leesbare pagina `/wetten` met WRO 1989 + alle S.B.-wijzigingen, Interimregeling Financiële Decentralisatie, Comptabiliteitswet-relevante artikelen, ontwerpwetten 2026.
+- FR-23.2 **MUST** Elke wetstekst is gekoppeld aan `LegalProvision`-records (versioned) en wordt door adviesmotor en `Competence`-tabel gerefereerd.
+- FR-23.3 **SHOULD** Conceptwet-tracker voor de twee aanstaande wetten 2026 (statisch in demo, levend in pilot).
+- FR-23.4 **SHOULD** Wijzigingen aan ruleset of bevoegdhedentabel via PR met juridische review (analoog aan `/regels`).
 
 ## 5.2 Niet-functionele requirements
 
@@ -200,12 +235,14 @@
 
 ## 5.3 Acceptatiecriteria demo (samenvattend)
 
-De demo wordt **geaccepteerd** wanneer alle MUST-items van FR-1 t/m FR-9 en FR-11, FR-12 functioneel werken op een testdataset met:
-- ten minste 3 fictieve districten,
+De demo wordt **geaccepteerd** wanneer alle MUST-items van FR-1 t/m FR-9, FR-11, FR-12 en de demo-subset van FR-20 t/m FR-23 functioneel werken op een testdataset met:
+- 10 districten en 62 ressorten als kaart- en bestuurlijke laag (officiële SR-grenzen),
 - ten minste 50 percelen,
 - ten minste 5 ITP-dorpen met traditioneel gebied,
-- ten minste 3 concessies (waarvan 1 met overlap),
+- ten minste 3 concessies (waarvan 1 met overlap en `BenefitShare`-voorstel),
 - ten minste 10 voorbeeldaanvragen (waarvan 3 met conflict),
-- en de adviesmotor minimaal 15 regels in alle 5 categorieën produceert.
+- ten minste 3 demo-districten met fictieve `DistrictFund`-pagina,
+- de adviesmotor minimaal 15 regels in alle 6 categorieën produceert (categorie 6 minimaal `BF-01`, `BF-02`, `BF-06`),
+- de `/wetten`-pagina toont WRO 1989 + minimaal 4 wijzigingen + Interimregeling.
 
 Zie [07-mvp-demo-scope.md](07-mvp-demo-scope.md) voor exacte demo-afbakening.

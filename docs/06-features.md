@@ -90,6 +90,7 @@
 | Ruimtelijk advies | Overlap, bestemming, beschermd | ✅ |
 | Sociaal advies | FPIC, gemeenschap betrokken | ✅ |
 | Beleidsadvies | Hotspots, ontbrekende registratie, demarcatie-prioriteiten | ⚠️ basic |
+| **Bestuurlijk-financieel advies** | Districtsopbrengst, WRO-bevoegdheid, Comptabiliteitswet-conflict, ITP-royalty | ⚠️ basic (3 regels) |
 | Regelconfiguratie | Zonder code aanpassen | ⏳ later |
 | Uitleg per advies | Welke regels, welk bewijs | ✅ |
 
@@ -158,6 +159,59 @@ Zie [10-adviesmotor.md](10-adviesmotor.md) voor de regels.
 | Workflow-configuratie | Zonder code | ⏳ later |
 | Importtools | CSV, Shapefile bulk | ⚠️ basic |
 | API-keys | Voor externe integraties | ⏳ later |
+
+## Module 14 — Bestuurlijke Entiteiten (WRO-spoor)
+
+> Volledige context in [19-wro-decentralisatie.md](19-wro-decentralisatie.md).
+
+| Feature | Korte beschrijving | Demo |
+|---|---|---|
+| Administratieve kaartlaag | 10 districten + 62 ressorten met officiële SR-grenzen | ✅ |
+| `AdministrativeUnit`-entiteit | District/ressort met geometry, populatie, Level-2-status | ✅ |
+| `RegionalBody`-register | DR/RR/DC per administratieve eenheid | ✅ basic |
+| `Competence` + `LegalProvision` | Bevoegdheden gekoppeld aan WRO-artikelen | ⚠️ basic |
+| `RegionalDecision`-register | DR-/RR-besluiten met stemverhouding | ⚠️ basic |
+| DR/RR-werkruimte | Eigen agenda, notulen, besluiten | ⏳ later (pilot) |
+| Conceptwet-tracker | DC-ontkoppeling + Financiële Autonomie 2026 | ⚠️ statisch |
+
+## Module 15 — Districtsfonds & Eigen Middelen
+
+> Volledige context in [20-financien-districtsfonds.md](20-financien-districtsfonds.md).
+
+| Feature | Korte beschrijving | Demo |
+|---|---|---|
+| `DistrictFund` per begrotingsjaar | Algemene afdracht + eigen inkomsten + uitgaven + saldo | ⚠️ basic (3 demo-districten, fictief) |
+| `RevenueSource` typed | Huurwaarde, vermakelijkheid, leges, marktgeld, parkeergeld, royalty | ⚠️ basic |
+| Level-2-certificering | Per district status + datum + bron | ✅ |
+| Algemene Afdracht-formule | Afnemend bij stijgende eigen middelen | ⚠️ formule, geen echte cijfers |
+| Comptabiliteitswet-conflictsignaal | Regel `BF-04` | ⚠️ basic |
+| District-portaal | Fondspagina + inkomstenboom + DR-besluiten | ⚠️ lichte versie |
+| Daadwerkelijke koppeling Min. Fin. / CBvS | Grootboek + afdrachten | ⏳ later (fase 2) |
+| Fiscaal-simulator | Wat-als-modellen | ⏳ later (fase 4) |
+
+## Module 16 — Wet- & Bevoegdhedenbibliotheek
+
+| Feature | Korte beschrijving | Demo |
+|---|---|---|
+| Pagina `/wetten` | Publiek leesbare bronnenlijst | ✅ |
+| WRO 1989 + S.B. 2000/2002/2005/2015 | Versioned in `LegalProvision` | ✅ |
+| Interimregeling Financiële Decentralisatie 2003 | Welke heffingen rechtstreeks naar DistrictFund | ✅ |
+| Ontwerpwetten 2026 (DC-ontkoppeling, Financiële Autonomie) | Statisch in demo, levend later | ⚠️ statisch |
+| Versionering via Git, wijziging via PR | Analoog aan `/regels` | ✅ |
+
+## Module 17 — Benefit Sharing (Koppeling Grond ↔ Fondsen ↔ ITP)
+
+> Volledige context in [21-koppeling-grond-fondsen.md](21-koppeling-grond-fondsen.md). Dit is het kernpunt van het werkgroep-mandaat.
+
+| Feature | Korte beschrijving | Demo |
+|---|---|---|
+| `BenefitShare`-entiteit | Concessie ↔ district ↔ ITP-gemeenschap | ✅ (1 demo-casus) |
+| Vier verdeelscenario's (A/B/C/D) | Op basis van overlap met customary_territory en protected_area | ✅ |
+| Adviesregel `BF-06` actief | Triggert bij overlap concessie/grondhuur ↔ customary | ✅ |
+| FPIC-toets verplicht | Geen ratificatie zonder FPIC-consent | ✅ |
+| Bekrachtigingsketen | DNA + Min. Fin. + community consent | ⚠️ velden aanwezig |
+| Periodieke royalty-monitoring | Met afwijkingssignalering | ⏳ later (fase 3) |
+| Hash-verankerde benefit-keten | IACHR-bestendige rapportage | ⏳ later (fase 4) |
 
 ## Legenda
 

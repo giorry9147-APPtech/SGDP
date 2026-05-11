@@ -75,9 +75,21 @@ En dat van daaruit:
 7. **Aansluitbaar.** Klaar voor koppeling met MI-GLIS, BR-personen-equivalent, concessieregisters.
 8. **Begrijpelijk.** Adviezen in gewone taal, kaarten begrijpelijk voor niet-juristen.
 
-## 4.6 Wat het platform níet is
+## 4.6 Twee pijlers — gelijkwaardig
+
+De naam SGDP draagt **twee pijlers** die in de werkgroep-opdracht onlosmakelijk verbonden zijn. Beide krijgen op platform-niveau eersterangs status:
+
+| Pijler | Spoor | Hoofddocs |
+|---|---|---|
+| **Grondenrechten** | Erkenning + demarcatie collectieve rechten ITP, conflictdetectie, FPIC, IACHR-bestendigheid | [04 visie](04-platform-visie.md), [11 FPIC](11-fpic-stakeholders.md), [15 juridisch](15-juridisch-kader.md), [17 milieu](17-milieu-nma.md), [18 grondhuur](18-grondhuur-conversie.md) |
+| **Decentralisatie** | Bestuurlijke en financiële verzelfstandiging van de tien districten op basis van WRO + Interimregeling Financiële Decentralisatie | [19 WRO](19-wro-decentralisatie.md), [20 financiën](20-financien-districtsfonds.md), [21 koppeling grond ↔ fondsen](21-koppeling-grond-fondsen.md) |
+
+Het hart van de werkgroep-opdracht ligt op het **snijvlak** van beide pijlers: hoe vloeien opbrengsten uit exploitatie van natuurlijke hulpbronnen rechtvaardig terug naar het district én de ITP-gemeenschap wier traditioneel woon- en leefgebied het betreft. Dit snijvlak is volledig uitgewerkt in [docs/21-koppeling-grond-fondsen.md](21-koppeling-grond-fondsen.md).
+
+## 4.7 Wat het platform níet is
 
 - **Geen vervanger van MI-GLIS.** Het is complementair en koppelt waar mogelijk.
 - **Geen rechtbank.** Het signaleert conflicten en ondersteunt bemiddeling, maar oordeelt niet.
 - **Geen vervanger van consultatie.** FPIC blijft een menselijk proces; het platform legt vast en bewaakt.
 - **Geen black-box AI.** Adviezen zijn regelgebaseerd of, indien ML, met expliciete uitleg en menselijke toetsing.
+- **Geen automatische verdeler van geld.** Bij benefit sharing of districtsroyalty levert het platform regelgebaseerde voorstellen; finale verdeling vereist FPIC, DR-besluit en bekrachtiging conform [21](21-koppeling-grond-fondsen.md).

@@ -23,11 +23,13 @@
 ## 13.3 Fase 1 — Pilot in één district
 
 **Tijdsbestek**: ~6 maanden na Fase 0
-**Doel**: echt gebruik op echte dossiers in beperkte scope
+**Doel**: echt gebruik op echte dossiers in beperkte scope — **zowel grondenrechten- als decentralisatiespoor**
 **Inhoud**:
-- Eén district kiezen waar zowel domeingrondaanvragen als ITP-overlap voorkomen.
+- Eén district kiezen waar zowel domeingrondaanvragen als ITP-overlap voorkomen én waar het decentralisatiespoor zinvol is (Level-2-status of -traject).
 - Echte (geanonimiseerde) data importeren in samenwerking met MI-GLIS en GBB.
 - Echte FPIC-trajecten met instemming van de gemeenschap.
+- **Pilot-district als bestuurlijke entiteit** activeren: DR/RR-werkruimte, fondspagina met begrotingsdata, Level-2-traject, `RevenueSource`-stromen (zie [19](19-wro-decentralisatie.md), [20](20-financien-districtsfonds.md)).
+- **Eén echte casus** met `BenefitShare`-uitwerking (concessie of grondhuur op customary territory) — zie [21](21-koppeling-grond-fondsen.md).
 - Performance- en beveiligingsaudit.
 - Privacy Impact Assessment (PIA) afronden.
 - Gebruikerstrainingen.
@@ -46,6 +48,7 @@
 - Koppeling **concessieregisters** (mijnbouw, hout).
 - Koppeling **identiteitsregister** of equivalent (verificatie partijen).
 - Koppeling **adressenregister**.
+- Koppeling **Ministerie van Financiën** en **CBvS** voor royalty-afdrachten en districtsfonds-grootboek ([20](20-financien-districtsfonds.md), [21](21-koppeling-grond-fondsen.md)).
 - OGC API-Features volledig conform.
 - Open data-portaal voor publiek (geanonimiseerd, OGC-conform).
 - Volledige meertaligheid in interface (NL + Sranantongo + relevante ITP-talen).
@@ -80,6 +83,8 @@
 - **Geautomatiseerde beleidsbriefings** uit aggregaten naar President.
 - **Internationale interoperabiliteit** (INSPIRE-achtig).
 - **Grensoverschrijdende samenwerking** (bv. met Frans-Guyana, Guyana voor grensgebieden).
+- **Fiscaal-simulator** — "wat als alle WRO-genoemde belastingen volledig naar Districtsfondsen vloeien": opbrengstprognose per district, gevoeligheidsanalyses ([20 §20.10](20-financien-districtsfonds.md)).
+- **Hash-verankerde benefit-keten** voor ITP-royalties; automatische periodieke IACHR-rapportage ([21 §21.10](21-koppeling-grond-fondsen.md)).
 
 ## 13.7 Cross-cutting onderwerpen door alle fasen
 

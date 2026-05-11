@@ -24,6 +24,12 @@ Uit de combinatie van Surinaamse wet- en beleidsteksten volgen drie architectura
 | Ontwerpwet | Ontwerpwet Collectieve Rechten ITP (DNA, in behandeling) | Erkenning, demarcatie, traditioneel gezag, FPIC |
 | Ontwerpwet | Ontwerp Wet Ruimtelijke Ordening 2024 | Bestemmings- en gebruiksrestricties; koppeling GLIS aan ruimtelijke data |
 | Ontwerpwet | Ontwerpwet Bescherming Privacy en Persoonsgegevens | Dataminimalisatie, doelbinding, classificatie |
+| Wet | **Wet Regionale Organen** (S.B. 1989 no. 44, gewijzigd S.B. 2000 no. 93, 2002 no. 54, 2005 no. 28, 2015 no. 132) | Inrichting districten en ressorten, organen (DR/RR/DC), bevoegdheden — basis decentralisatiespoor; zie [19](19-wro-decentralisatie.md) |
+| Regeling | **Interimregeling Financiële Decentralisatie** (2003) | Welke heffingen rechtstreeks naar Districtsfonds vloeien; zie [20](20-financien-districtsfonds.md) |
+| Besluit | S.B. 2006 no. 134 — Districtsfonds en Districtsbegroting | Financiële infrastructuur districten |
+| Wet | Comptabiliteitswet | Centrale begrotingsdiscipline; conflict-/harmonisatieregel `BF-04` |
+| Ontwerpwet | Ontwerpwet DC-Ontkoppeling (verwacht 2026) | DR krijgt eigen voorzitter; DC niet langer voorzitter; regel `BF-03` |
+| Ontwerpwet | Ontwerpwet Financiële Autonomie Districten (verwacht 2026) | Directe beschikking eigen middelen; zie [20](20-financien-districtsfonds.md) |
 | Beleid | National Digital Strategy 2023–2030 | Digitale identiteit, interoperabiliteit, data sharing |
 | Jurisprudentie | IACHR Saramaka v. Suriname (2007) | Collectieve titel, effectieve consultatie, FPIC bij major-impact, benefit-sharing, prior E&S impact assessment |
 | Jurisprudentie | IACHR Kaliña en Lokono v. Suriname (2015) | Demarcatie, participatie in natuurreservaten, derdenafweging, rehabilitatie |
@@ -50,6 +56,10 @@ Uit de combinatie van Surinaamse wet- en beleidsteksten volgen drie architectura
 | C14 | FAO VGGT | Transparantie, customary rights, toegankelijke geschilbeslechting | Public+internal transparancy; customary records; grievance & dispute timeline | [11-fpic-stakeholders.md](11-fpic-stakeholders.md) |
 | C15 | FAO FPIC Toolkit | Iteratief proces; legitieme vertegenwoordiging; toegankelijke informatie; grievance | Representative verification, disclosure controls, multilingual packets, grievance panel | [11-fpic-stakeholders.md](11-fpic-stakeholders.md) |
 | C16 | Ontwerpwet Collectieve Rechten ITP / WRO / privacywet | Toekomstige rechtsontwikkeling | Configureerbare regels, feature flags, metadata voor wetversie en beleidsregime per zaak | [09-architectuur.md](09-architectuur.md) §9.3.6 |
+| C17 | WRO (S.B. 1989 no. 44 + wijzigingen) | Bestuurlijke inrichting districten/ressorten; bevoegdheden DR/RR/DC | `AdministrativeUnit`, `RegionalBody`, `Competence` met versionering wetregime | [19-wro-decentralisatie.md](19-wro-decentralisatie.md), [08-data-model.md §8.8](08-data-model.md) |
+| C18 | Interimregeling Financiële Decentralisatie 2003 + S.B. 2006 no. 134 | Inkomstenoverdracht naar Districtsfondsen; Level-2-vereiste | `DistrictFund`, `RevenueSource`; regels `BF-01`, `BF-02` | [20-financien-districtsfonds.md](20-financien-districtsfonds.md), [10-adviesmotor.md §10.5](10-adviesmotor.md) |
+| C19 | Comptabiliteitswet | Centrale begrotingsdiscipline | Regel `BF-04` detecteert conflict met districtsverordening; review Min. Fin. | [20-financien-districtsfonds.md §20.7](20-financien-districtsfonds.md) |
+| C20 | IACHR Saramaka + WRO + Interimregeling (gecombineerd) | Benefit sharing bij exploitatie op customary territory | `BenefitShare`-entiteit, regel `BF-06`, FPIC-toets verplicht | [21-koppeling-grond-fondsen.md](21-koppeling-grond-fondsen.md) |
 
 ## 15.4 Federatief autorisatie- en mandaatmodel
 
@@ -99,9 +109,12 @@ Omdat ontwerpwetten in behandeling zijn, registreert het platform per zaak het *
 case_legal_regime:
   domeingrond_decreet_version: "1981"
   glis_inschrijvingsbesluit_version: "2025"
-  collectieve_rechten_status: "ontwerp_dna_2019"   # update bij wetwording
+  collectieve_rechten_status: "ontwerp_dna_2019"        # update bij wetwording
   privacy_regime: "ontwerp_2024"
-  wro_regime: "ontwerp_2024"
+  wro_version: "S.B._2015_132"                          # laatste van kracht zijnde WRO-wijziging
+  financiele_autonomie_version: "interimregeling_2003"  # update bij ontwerp_2026_b
+  dc_ontkoppeling_status: "voor_inwerkingtreding"       # ontwerp_2026_a
+  comptabiliteitswet_version: "current"
 ```
 
 Wijziging van wetregime is een geconfigureerde release die door beheerders wordt geactiveerd, niet een code-wijziging. Dit voorkomt dat lopende zaken plotseling onder een ander regime vallen.

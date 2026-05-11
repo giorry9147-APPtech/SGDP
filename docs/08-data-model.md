@@ -306,10 +306,114 @@ Zie [17-milieu-nma.md §17.4](17-milieu-nma.md#174-datamodel-uitbreidingen): `En
 ### 8.7.6 Grondhuur-/conversie-/vervallenverklaring-entiteiten
 Zie [18-grondhuur-conversie.md](18-grondhuur-conversie.md): `tenure_relation` met levenscyclus, `conversion`, `forfeiture`, `compensation_case`.
 
-## 8.7 Waarom deze keuzes
+## 8.8 Bestuurlijke en financiële entiteiten (WRO-spoor)
+
+Uitwerking van de tweede pijler ([04 §4.6](04-platform-visie.md)) — bestuurlijke structuur (WRO) en financiële autonomie (Interimregeling + ontwerpwetten 2026). Volledige context in [19](19-wro-decentralisatie.md), [20](20-financien-districtsfonds.md), [21](21-koppeling-grond-fondsen.md).
+
+### 8.8.1 `AdministrativeUnit`
+| Veld | Type | Toelichting |
+|---|---|---|
+| `admin_id` | UUID | |
+| `admin_type` | enum (`district`, `ressort`) | 10 districten + 62 ressorten |
+| `name` | string | |
+| `parent_admin_id` | FK (zelf) | Ressort hangt onder district |
+| `geometry` | geometry | Officiële bestuurlijke grens |
+| `population` | int | |
+| `level2_certified` | bool | |
+| `level2_date` | date | |
+| `level2_assessment_uri` | FK → `LA_Source` | Onderliggend certificeringsdocument |
+
+Elke `LA_SpatialUnit` ligt in één ressort, dat in één district. Koppeling via spatial join op `geometry`.
+
+### 8.8.2 `RegionalBody`
+| Veld | Type | Toelichting |
+|---|---|---|
+| `body_id` | UUID | |
+| `body_type` | enum (`DR`, `RR`, `DC`) | Districtsraad, Ressortraad, Districtscommissaris |
+| `admin_id` | FK | |
+| `chairperson_party_id` | FK → `LA_Party` | Apart van `dc_party_id` (relevant na DC-ontkoppelingswet) |
+| `dc_party_id` | FK → `LA_Party` (optioneel) | Indien DC nog DR-voorzitter onder huidig regime |
+| `members` | json | Lijst party_id's met functie |
+| `term_start`, `term_end` | date | Zittingsperiode |
+| `wro_version_applicable` | string | Welk WRO-regime van toepassing |
+
+### 8.8.3 `Competence`
+| Veld | Type | Toelichting |
+|---|---|---|
+| `comp_id` | UUID | |
+| `body_type` | enum (`DR`, `RR`, `DC`, `MinFin`, `MinBiZa`) | |
+| `competence_type` | enum (`belastingheffing`, `vergunning`, `verordening`, `begroting`, `consultatie`, `uitgifte`) | |
+| `legal_basis_provision_id` | FK → `LegalProvision` | |
+| `valid_from`, `valid_to` | date | |
+
+### 8.8.4 `LegalProvision`
+| Veld | Type | Toelichting |
+|---|---|---|
+| `prov_id` | UUID | |
+| `wet` | enum (`WRO`, `Interimregeling`, `Comptabiliteitswet`, `Decreet_Domeingrond`, `Wet_GLIS`, `Milieu_Raamwet`, `Ontwerpwet_CR_ITP`, `Ontwerpwet_DC_Ontkoppeling`, `Ontwerpwet_Financiele_Autonomie`) | |
+| `staatsblad` | string | Bv. `S.B. 1989 no. 44` |
+| `artikel` | string | |
+| `tekst` | text | |
+| `valid_from`, `valid_to` | date | |
+| `superseded_by` | FK (zelf) | Volgende versie van dit artikel |
+
+Versionering: zo blijft transparant onder welke wetsversie een dossier of besluit viel.
+
+### 8.8.5 `RegionalDecision`
+| Veld | Type | Toelichting |
+|---|---|---|
+| `regional_decision_id` | UUID | |
+| `body_id` | FK | DR of RR |
+| `meeting_id` | FK → `Meeting` | |
+| `subject` | string | |
+| `outcome` | text | |
+| `vote_for`, `vote_against`, `abstain` | int | |
+| `minority_view` | text | |
+| `competence_id` | FK → `Competence` | Welke bevoegdheid dekt dit besluit |
+| `linked_case_ids` | json | |
+| `legal_regime_snapshot` | json | Welke WRO-versie + Interimregelingsstatus gold |
+
+### 8.8.6 `DistrictFund`
+Zie volledige uitwerking in [docs/20 §20.4.1](20-financien-districtsfonds.md).
+
+### 8.8.7 `RevenueSource`
+Zie volledige uitwerking in [docs/20 §20.4.2](20-financien-districtsfonds.md). Linkt aan `linked_rrr_id` en `linked_spatial_unit_id` zodat elke opbrengst herleidbaar is naar het recht en de grond waar het uit voortkomt.
+
+### 8.8.8 `Expenditure`
+Zie volledige uitwerking in [docs/20 §20.4.3](20-financien-districtsfonds.md).
+
+### 8.8.9 `BenefitShare`
+Zie volledige uitwerking in [docs/21 §21.5](21-koppeling-grond-fondsen.md). Verbindt `LA_RRR` (concessie/grondhuur) ↔ `AdministrativeUnit` (district) ↔ `ST_Community` (ITP) ↔ `FPIC_Process`.
+
+### 8.8.10 Relatieschema bestuurlijke entiteiten
+
+```
+AdministrativeUnit (district) ──┐
+        │                       │ 1..*
+        │ 1..*                  ▼
+        ▼              ┌────────────────┐
+AdministrativeUnit ◄───│ LA_SpatialUnit │
+   (ressort)           └────────┬───────┘
+        │                       │
+        │                       ▼
+        ▼                  LA_RRR ─────► BenefitShare ◄──── ST_Community
+   RegionalBody                              │                  │
+   (DR/RR/DC)                                ▼                  │
+        │                              RevenueSource            │
+        │                                    │                  │
+        ▼                                    ▼                  │
+   RegionalDecision ────► Competence    DistrictFund ◄──────────┘
+        │                     │              ▲
+        │                     ▼              │
+        └────────────► LegalProvision        Expenditure
+```
+
+## 8.9 Waarom deze keuzes
 
 - **LADM** geeft internationale standaardisatie en SDG-rapportage (incl. indicator 1.4.2).
 - **STDM** voorkomt dat ITP-rechten worden geforceerd in een formele eigendoms-mal.
 - **FFP-LA** legitimeert dat we starten met "voldoende nauwkeurig" en niet wachten op cm-precisie.
 - **Versionering + audit log** is de fundering tegen corruptie en voor IACHR-bestendigheid.
 - **Aparte FPIC-tabellen** maken FPIC een eersterangs object, niet een notitieveld.
+- **Aparte bestuurlijk-financiële entiteiten** (`AdministrativeUnit`, `RegionalBody`, `DistrictFund`, `RevenueSource`, `BenefitShare`) maken decentralisatie net zo zwaar gemodelleerd als grondenrechten — beide pijlers van het werkgroep-mandaat ([04 §4.6](04-platform-visie.md)) krijgen daarmee gelijkwaardige datadragers.
+- **`LegalProvision` met versionering** garandeert dat elke regel, bevoegdheid en advies traceerbaar is naar een specifiek artikel van een specifieke wetversie — onmisbaar onder bewegende wetgeving ([15 §15.1.3](15-juridisch-kader.md)).
